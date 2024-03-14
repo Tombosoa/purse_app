@@ -1,0 +1,988 @@
+openapi: 3.0.0
+info:
+  title: Purse application
+  version: 1.0.0
+  description: This application is the first numeric bank at our country
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Client
+  - name: Account
+  - name: Bank
+  - name: Transaction
+  - name: Category
+  - name: Interest
+  - name: TransferHistory
+paths:
+  /client/all:
+    get:
+      tags:
+        - Client
+      summary: get all Client
+      operationId: getClients
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/Client'
+
+  /client/{id}:
+    get:
+      tags:
+        - Client
+      summary: get one client by id
+      operationId: getClientById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: get by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Client'
+    delete:
+      tags:
+        - Client
+      summary: delete one client by id
+      operationId: deleteClientById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: delete by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Client'
+
+  /client: 
+    post:
+      tags:
+        - Client
+      summary: create new client
+      operationId: createClient
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Client"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Client'
+    put:  
+      tags:
+        - Client
+      summary: crupdate client
+      operationId: crupdateClient
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Client"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Client'
+
+
+
+#-------------------Account------------------
+  /account/all:
+    get:
+      tags:
+        - Account
+      summary: get all Account
+      operationId: getAccounts
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/Account'
+
+  /account/{id}:
+    get:
+      tags:
+        - Account
+      summary: get one account by id
+      operationId: getAccountById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: get by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Account'
+    delete:
+      tags:
+        - Account
+      summary: delete one account by id
+      operationId: deleteAccountById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: delete by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Account'
+
+  /account: 
+    post:
+      tags:
+        - Account
+      summary: create new account
+      operationId: createAccount
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Account"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Account'
+    put:  
+      tags:
+        - Account
+      summary: crupdate account
+      operationId: crupdateAccount
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Account"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Account'
+
+#-----------------Bank-----------------
+  /bank/all:
+    get:
+      tags:
+        - Bank
+      summary: get all bank
+      operationId: getbanks
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/Bank'
+
+  /bank/{id}:
+    get:
+      tags:
+        - Bank
+      summary: get one bank by id
+      operationId: getbankById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: get by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Bank'
+    delete:
+      tags:
+        - Bank
+      summary: delete one bank by id
+      operationId: deletebankById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: delete by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Bank'
+
+  /bank: 
+    post:
+      tags:
+        - Bank
+      summary: create new bank
+      operationId: createbank
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Bank"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Bank'
+    put:  
+      tags:
+        - Bank
+      summary: crupdate bank
+      operationId: crupdatebank
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Bank"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Bank'
+
+#-----------Transaction----------------------
+  /transaction/all:
+    get:
+      tags:
+        - Transaction
+      summary: get all transaction
+      operationId: gettransactions
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/Transaction'
+
+  /transaction/{id}:
+    get:
+      tags:
+        - Transaction
+      summary: get one transaction by id
+      operationId: gettransactionById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: get by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Transaction'
+    delete:
+      tags:
+        - Transaction
+      summary: delete one transaction by id
+      operationId: deletetransactionById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: delete by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Transaction'
+
+  /transaction: 
+    post:
+      tags:
+        - Transaction
+      summary: create new transaction
+      operationId: createtransaction
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Transaction'
+    put:  
+      tags:
+        - Transaction
+      summary: crupdate transaction
+      operationId: crupdatetransaction
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Transaction'
+
+#--------Category------------------------
+  /category/all:
+    get:
+      tags:
+        - Category
+      summary: get all category
+      operationId: getcategorys
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/Category'
+
+  /category/{id}:
+    get:
+      tags:
+        - Category
+      summary: get one category by id
+      operationId: getcategoryById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: get by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Category'
+    delete:
+      tags:
+        - Category
+      summary: delete one category by id
+      operationId: deletecategoryById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: delete by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Category'
+
+  /category: 
+    post:
+      tags:
+        - Category
+      summary: create new category
+      operationId: createcategory
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Category"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Category'
+    put:  
+      tags:
+        - Category
+      summary: crupdate category
+      operationId: crupdatecategory
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Category"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Category'
+
+#---------------Interest----------------
+  /interest/all:
+    get:
+      tags:
+        - Interest
+      summary: get all interest
+      operationId: getinterests
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/Interest'
+
+  /interest/{id}:
+    get:
+      tags:
+        - Interest
+      summary: get one interest by id
+      operationId: getinterestById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: get by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Interest'
+    delete:
+      tags:
+        - Interest
+      summary: delete one interest by id
+      operationId: deleteinterestById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: delete by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Interest'
+
+  /interest: 
+    post:
+      tags:
+        - Interest
+      summary: create new interest
+      operationId: createinterest
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Interest"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Interest'
+    put:  
+      tags:
+        - Interest
+      summary: crupdate interest
+      operationId: crupdateinterest
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Interest"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Interest'
+
+#-------------TransferHistory---------
+  /transferHistory/all:
+    get:
+      tags:
+        - TransferHistory
+      summary: get all transferHistory
+      operationId: gettransferHistorys
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/TransferHistory'
+
+  /transferHistory/{id}:
+    get:
+      tags:
+        - TransferHistory
+      summary: get one transferHistory by id
+      operationId: gettransferHistoryById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: get by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/TransferHistory'
+    delete:
+      tags:
+        - TransferHistory
+      summary: delete one transferHistory by id
+      operationId: deletetransferHistoryById
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: delete by id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/TransferHistory'
+
+  /transferHistory: 
+    post:
+      tags:
+        - TransferHistory
+      summary: create new transferHistory
+      operationId: createtransferHistory
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/TransferHistory"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/TransferHistory'
+    put:  
+      tags:
+        - TransferHistory
+      summary: crupdate transferHistory
+      operationId: crupdatetransferHistory
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/TransferHistory"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/TransferHistory'
+
+
+components:
+  schemas:
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        monthlyPay:
+          type: integer
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        balance:
+          type: integer
+        creditAuthorization:
+          type: boolean
+        idClient:
+          type: string
+        idBank:
+          type: integer
+    Interest:
+      type: object
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+        dayGone:
+          type: integer
+    Bank:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum:
+            - Incoming
+            - Outgoing
+            - Loan
+        name:
+          type: string
+          enum:
+            - Food_and_Drinks
+            - Online_Shopping
+            - Housing
+            - Transportation
+            - Vehicle
+            - Leisure
+            - Multimedia_and_Computers
+            - Financial_Expenses
+            - Investments
+            - Income
+            - Other
+            - Unknown
+    Transaction:
+      type: object
+      properties:
+        id: 
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        registrationDate:
+          type: string
+          format: date
+        effectiveDate:
+          type: string
+          format: date
+        amount:
+          type: integer
+        status:
+          type: boolean
+        reference:
+          type: string
+        idAccount:
+          type: string
+        idCategory:
+          type: integer
+    TransferHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        idAccountDebited:
+          type: string
+        idAccountCredited:
+          type: string
+        transaction:
+          $ref: "#/components/schemas/Transaction"
+    Exception:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            status_code:
+              type: string
+              example: 200
+            message:
+              type: string
+              example: OK
+        body: 
+          type: object
+
+    ResponseSuccessfully:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+    
+    BadRequest:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        status:
+          status_code: 400
+          message: BAD REQUEST 
+        body: { }
+
+    
+    Forbidden:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        status:
+          status_code: 400
+          message: FORBIDDEN 
+        body: { }
+
+    ServerError:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        status: 
+          status_code: 500
+          message: SERVOR ERROR 
+        body: { }
+
+    ListBody: 
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+        - properties:
+            body:
+              type: array
+
+    ResponseBody:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+        - properties:
+            body:
+              type: object
+
+  responses:
+    ListSuccess:
+      description: Liste d'éléments
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              body:
+                type: array
+    
+    ResponseBodySuccess:
+      description: un composant 
+      content:
+        application/json:
+          schema: 
+            type: object
+
