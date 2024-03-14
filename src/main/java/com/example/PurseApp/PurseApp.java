@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.example.PurseApp")
 public class PurseApp {
 
 	public static void main(String[] args) {
