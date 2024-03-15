@@ -1,7 +1,7 @@
 package com.example.PurseApp.Entity;
 
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Objects;
 
 public class Client {
@@ -46,7 +46,7 @@ public class Client {
         this.lastname = lastname;
     }
 
-    public Date getBirthdate() {
+    public java.sql.Date getBirthdate() {
         return birthdate;
     }
 
