@@ -1,0 +1,83 @@
+package com.example.PurseApp.Repository;
+
+import com.example.PurseApp.DataBaseConnection;
+import com.example.PurseApp.Entity.Account;
+import jakarta.el.PropertyNotFoundException;
+import org.springframework.stereotype.Component;
+
+import javax.swing.plaf.nimbus.State;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Component
+public class AccountRepository implements CrudOperation<Account>{
+    String userName = System.getenv("DB_USERNAME");
+    String password = System.getenv("DB_PASSWORD");
+    String databaseName = System.getenv("DB_NAME");
+    DataBaseConnection dbConnection = new DataBaseConnection(userName, password, databaseName);
+    Connection conn = dbConnection.getConnection();
+    public Statement statement;
+    @Override
+    public List<Account> findAll() {
+        List<Account> accountList = new ArrayList<>();
+        try (Statement statement = conn.createStatement()){
+            String query = "select account.id as id, firstname, lastname, birthdate, monthlypay, balance, creditauthorization, bank.name, client.id as idclient from client inner join account on client.id = account.idclient inner join bank on bank.id = account.idbank";
+            try (ResultSet resultSet = statement.executeQuery(query)){
+                while (resultSet.next()){
+                    String id = resultSet.getString("id");
+                    String firstname = resultSet.getString("firstname");
+                    String lastname = resultSet.getString("lastname");
+                    Date birthdate = resultSet.getDate("birthdate");
+                    double monthlyPay = resultSet.getDouble("monthlypay");
+                    double balance = resultSet.getDouble("balance");
+                    boolean creditAuthorization = resultSet.getBoolean("creditauthorization");
+                    String name = resultSet.getString("name");
+                    String idClient = resultSet.getString("idclient");
+
+                    Account account = new Account(id, firstname, lastname, birthdate, monthlyPay, balance, creditAuthorization, name, idClient);
+                    accountList.add(account);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return accountList;
+    }
+
+    @Override
+    public List<Account> saveAll(List<Account> toSave) {
+        return null;
+    }
+
+    @Override
+    public Account save(Account toSave) {
+        try{
+            String query = "INSERT INTO account (balance, idclient, idbank) VALUES (?,CAST(? AS UUID),?)";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setDouble(1, toSave.getBalance());
+            preparedStatement.setString(2, String.valueOf(UUID.fromString(toSave.getIdClient())));
+            preparedStatement.setInt(3, toSave.getIdBank());
+            preparedStatement.executeUpdate();
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return toSave;
+    }
+
+    @Override
+    public Account update(Account toUpdate) {
+        return null;
+    }
+
+    @Override
+    public Account delete(Account toDelete) {
+        return null;
+    }
+
+    @Override
+    public Account getOne(Account one) throws PropertyNotFoundException {
+        return null;
+    }
+}
