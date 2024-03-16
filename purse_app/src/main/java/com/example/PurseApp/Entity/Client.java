@@ -19,7 +19,16 @@ public class Client {
         this.monthlyPay = monthlyPay;
     }
 
+
+
     public Client() {
+    }
+
+    public Client(String firstname, String lastname, Date birthdate, double monthlyPay) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.birthdate = birthdate;
+        this.monthlyPay = monthlyPay;
     }
 
     public String getId() {
