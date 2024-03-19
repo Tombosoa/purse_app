@@ -10,11 +10,11 @@ const Home = () => {
           <p>PurseApp</p>
         </div>
         <div className="middle">
-          <h1 className="text">Vos Finances reunies en un seul endroit</h1>
+          <h1 className="text">Your Finances in one place</h1>
           <div className="image"></div>
           <p>
-            Plongez dans les rapports, élaborez des budgets, synchronisez vos
-            banques et profitez de la catégorisation automatique.
+          Dive into reports, build budgets, sync your
+            banks and benefit from automatic categorization.
           </p>
           <div className="app">
             <div className="image2"></div>
@@ -22,7 +22,28 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="right"></div>
+      <div className="right">
+        <h3>All Accounts</h3>
+        <table>
+  <tr>
+    <th>Name</th>
+    <th>LastName</th>
+    <th>Birthdate</th>
+    <th>Salary</th>
+    <th>Count Id</th>
+  </tr>
+  <tr>
+    <td>Rakoto</td>
+    <td> Anders</td>
+    <td>12 Mai 1992</td>
+    <td>100000$</td>
+    <td>123456789</td>
+    <button>delete</button>
+    <button>modify</button>
+  </tr>
+</table>
+<button>Add a new Account</button>
+      </div>
     </div>
   );
 };
