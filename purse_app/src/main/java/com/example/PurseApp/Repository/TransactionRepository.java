@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,5 +98,49 @@ public class TransactionRepository implements CrudOperation<Transaction>{
     @Override
     public Transaction getOne(Transaction one) throws PropertyNotFoundException {
         return null;
+    }
+
+    public Transaction getOneById(int id){
+        try {
+            String query = "SELECT * FROM transaction WHERE id = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                Transaction transaction = new Transaction();
+                transaction.setId(resultSet.getInt("id"));
+                transaction.setType(resultSet.getString("type"));
+                transaction.setDescription(resultSet.getString("description"));
+                transaction.setRegistrationDate(resultSet.getDate("registrationdate").toLocalDate());
+                transaction.setEffectiveDate(resultSet.getDate("effectivedate").toLocalDate());
+                transaction.setAmount(resultSet.getDouble("amount"));
+                transaction.setStatus(resultSet.getBoolean("status"));
+                transaction.setReference(resultSet.getString("reference"));
+                transaction.setIdCategory(resultSet.getInt("idcategory"));
+                transaction.setIdAccount(resultSet.getString("idaccount"));
+
+                return transaction;
+            }else {
+                throw new PropertyNotFoundException("Account not found with id: " + id);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateEffectiveDateById(int id){
+        try{
+            String query = "UPDATE transaction SET effectivedate= ? WHERE id = ?";
+            Transaction transaction = getOneById(id);
+            LocalDateTime registrationDate = transaction.getRegistrationDate().atTime(LocalTime.now());
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setObject(1, registrationDate.plusMinutes(2));
+            preparedStatement.setInt(2, id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

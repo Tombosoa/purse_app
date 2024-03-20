@@ -80,4 +80,52 @@ public class AccountRepository implements CrudOperation<Account>{
     public Account getOne(Account one) throws PropertyNotFoundException {
         return null;
     }
+
+    public Account updateById(UUID idAccount, double amount) throws SQLException {
+        String updateAccount = "UPDATE account SET balance = ? WHERE id = ?";
+        PreparedStatement newStatement = conn.prepareStatement(updateAccount);
+        newStatement.setDouble(1, amount);
+        newStatement.setObject(2, idAccount);
+        newStatement.executeUpdate();
+        return null;
+    }
+
+    public Account getOneById(UUID id){
+        try{
+            String query = "SELECT * FROM account WHERE id = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setObject(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()){
+                Account account = new Account();
+                account.setId(resultSet.getString("id"));
+                account.setBalance(resultSet.getDouble("balance"));
+                account.setCreditAuthorization(resultSet.getBoolean("creditauthorization"));
+                account.setIdBank(resultSet.getInt("idbank"));
+                account.setIdClient(resultSet.getString("idclient"));
+
+                return account;
+            } else {
+                throw new PropertyNotFoundException("Account not found with id: " + id);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateBalanceById(UUID id, double newBalance){
+        try{
+            String query = "UPDATE account SET balance = ? WHERE id = ?";
+            Account account = getOneById(id);
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setDouble(1, account.getBalance() + newBalance);
+            preparedStatement.setObject(2, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
