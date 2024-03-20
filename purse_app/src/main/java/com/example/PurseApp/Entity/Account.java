@@ -11,6 +11,7 @@ public class Account extends Client{
     private int idBank;
     private String name;
 
+
     public String getName() {
         return name;
     }
