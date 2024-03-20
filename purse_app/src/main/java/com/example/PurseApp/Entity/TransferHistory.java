@@ -5,8 +5,8 @@ import java.util.UUID;
 
 public class TransferHistory {
     private int id;
-    private UUID idTransactionDebited;
-    private UUID idTransactionCredited;
+    private int idTransactionDebited;
+    private int idTransactionCredited;
 
     public int getId() {
         return id;
@@ -16,23 +16,23 @@ public class TransferHistory {
         this.id = id;
     }
 
-    public UUID getIdTransactionDebited() {
+    public int getIdTransactionDebited() {
         return idTransactionDebited;
     }
 
-    public void setIdTransactionDebited(UUID idTransactionDebited) {
+    public void setIdTransactionDebited(int idTransactionDebited) {
         this.idTransactionDebited = idTransactionDebited;
     }
 
-    public UUID getIdTransactionCredited() {
+    public int getIdTransactionCredited() {
         return idTransactionCredited;
     }
 
-    public void setIdTransactionCredited(UUID idTransactionCredited) {
+    public void setIdTransactionCredited(int idTransactionCredited) {
         this.idTransactionCredited = idTransactionCredited;
     }
 
-    public TransferHistory(int id, UUID idTransactionDebited, UUID idTransactionCredited) {
+    public TransferHistory(int id, int idTransactionDebited, int idTransactionCredited) {
         this.id = id;
         this.idTransactionDebited = idTransactionDebited;
         this.idTransactionCredited = idTransactionCredited;
@@ -45,7 +45,7 @@ public class TransferHistory {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof TransferHistory that)) return false;
-        return getId() == that.getId() && Objects.equals(getIdTransactionDebited(), that.getIdTransactionDebited()) && Objects.equals(getIdTransactionCredited(), that.getIdTransactionCredited());
+        return getId() == that.getId() && getIdTransactionDebited() == that.getIdTransactionDebited() && getIdTransactionCredited() == that.getIdTransactionCredited();
     }
 
     @Override
