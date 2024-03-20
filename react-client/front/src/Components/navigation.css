@@ -15,7 +15,7 @@
     border-bottom: 0.5px rgba(0, 0, 0, 0.218) solid ;
 }
 .Logo{
-    background: url(C:\Users\Tokiniaina\purse_app\react-client\front\src\Picture\1000_F_500757657_aO4HQOutu28TAuxUelSEIPwCN9YX5iaF-removebg-preview.png);
+    background: url(../Picture/1000_F_500757657_aO4HQOutu28TAuxUelSEIPwCN9YX5iaF-removebg-preview.png);
     width: 5%;
     height: 62%;
     background-size: cover;
