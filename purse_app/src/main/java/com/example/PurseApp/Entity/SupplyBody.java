@@ -7,6 +7,15 @@ public class SupplyBody {
     private String action;
     private double supplyAmount;
     private UUID idAccount;
+     private String actionName;
+
+    public String getActionName() {
+        return actionName;
+    }
+
+    public void setActionName(String actionName) {
+        this.actionName = actionName;
+    }
 
     public String getAction() {
         return action;
@@ -32,6 +41,13 @@ public class SupplyBody {
         this.idAccount = idAccount;
     }
 
+    public SupplyBody(String action, double supplyAmount, UUID idAccount, String actionName) {
+        this.action = action;
+        this.supplyAmount = supplyAmount;
+        this.idAccount = idAccount;
+        this.actionName = actionName;
+    }
+
     public SupplyBody(String action, double supplyAmount, UUID idAccount) {
         this.action = action;
         this.supplyAmount = supplyAmount;
@@ -45,12 +61,12 @@ public class SupplyBody {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SupplyBody that)) return false;
-        return Double.compare(getSupplyAmount(), that.getSupplyAmount()) == 0 && Objects.equals(getAction(), that.getAction()) && Objects.equals(getIdAccount(), that.getIdAccount());
+        return Double.compare(getSupplyAmount(), that.getSupplyAmount()) == 0 && Objects.equals(getAction(), that.getAction()) && Objects.equals(getIdAccount(), that.getIdAccount()) && Objects.equals(getActionName(), that.getActionName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAction(), getSupplyAmount(), getIdAccount());
+        return Objects.hash(getAction(), getSupplyAmount(), getIdAccount(), getActionName());
     }
 
     @Override
@@ -59,6 +75,7 @@ public class SupplyBody {
                 "action='" + action + '\'' +
                 ", supplyAmount=" + supplyAmount +
                 ", idAccount=" + idAccount +
+                ", actionName='" + actionName + '\'' +
                 '}';
     }
 }
