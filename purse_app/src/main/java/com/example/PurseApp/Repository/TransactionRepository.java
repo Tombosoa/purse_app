@@ -135,8 +135,21 @@ public class TransactionRepository implements CrudOperation<Transaction>{
             Transaction transaction = getOneById(id);
             LocalDateTime registrationDate = transaction.getRegistrationDate().atTime(LocalTime.now());
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setObject(1, registrationDate.plusMinutes(2));
+            preparedStatement.setObject(1, registrationDate.plusDays(1));
             preparedStatement.setInt(2, id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateStatusById(int id){
+        try{
+            String query = "UPDATE transaction SET status = true WHERE id = ?";
+            Transaction transaction = getOneById(id);
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
