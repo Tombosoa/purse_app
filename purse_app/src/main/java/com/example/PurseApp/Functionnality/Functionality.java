@@ -14,13 +14,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Component
-public class Functionnality {
+public class Functionality {
     String userName = System.getenv("DB_USERNAME");
     String password = System.getenv("DB_PASSWORD");
     String databaseName = System.getenv("DB_NAME");
@@ -34,7 +33,7 @@ public class Functionnality {
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public Functionnality(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferHistoryRepository transferHistoryRepository, CategoryRepository categoryRepository) {
+    public Functionality(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferHistoryRepository transferHistoryRepository, CategoryRepository categoryRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.transferHistoryRepository = transferHistoryRepository;
@@ -113,9 +112,9 @@ public class Functionnality {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Scheduled(cron = "0 * * * * *")
-    public void testScheduled() throws SQLException {
+    public void balanceValueScheduled() throws SQLException {
         List<Transaction> transactions = transactionRepository.findAll();
         for (Transaction transaction:transactions){
             if(Objects.equals(transaction.getEffectiveDate(), LocalDate.now()) && !transaction.isStatus()){
@@ -129,5 +128,4 @@ public class Functionnality {
             }
         }
     }
-
 }
