@@ -10,3 +10,5 @@ CREATE TABLE IF NOT EXISTS Transaction(
     idCategory int references Category(id),
     idAccount uuid references Account(id)
 );
+ALTER TABLE transaction add column label varchar(255);
+ALTER TABLE transaction add column situation varchar(255);
