@@ -15,7 +15,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -50,10 +51,9 @@ public class Functionnality {
         transaction.setAmount(supplyBody.getSupplyAmount());
         transaction.setEffectiveDate(date);
         transaction.setIdAccount(supplyBody.getIdAccount().toString());
-        transaction.setStatus(true);
+        transaction.setStatus(false);
 
         if (supplyBody.getAction().equals("Loan") && creditAuthorization) {
-                accountRepository.updateById(supplyBody.getIdAccount(), actualBalance - supplyBody.getSupplyAmount());
                 transaction.setType("Loan");
                 transaction.setDescription("make loan");
                 Category category = categoryRepository.getByTypeAndName(supplyBody.getAction(), supplyBody.getActionName());
@@ -66,7 +66,6 @@ public class Functionnality {
             } else if (actualBalance - supplyBody.getSupplyAmount() <= 0 ) {
                 return 0;
             }else if (actualBalance - supplyBody.getSupplyAmount() >= 0) {
-                accountRepository.updateById(supplyBody.getIdAccount(), actualBalance - supplyBody.getSupplyAmount());
                 transaction.setType("Outgoing");
                 transaction.setDescription("Debited account");
                 Category category = categoryRepository.getByTypeAndName(supplyBody.getAction(), supplyBody.getActionName());
@@ -75,12 +74,10 @@ public class Functionnality {
                 idTransaction = response.getId();
             }
         } else if (supplyBody.getAction().equals("Incoming")) {
-            accountRepository.updateById(supplyBody.getIdAccount(), actualBalance + supplyBody.getSupplyAmount());
             transaction.setType("Incoming");
             transaction.setDescription("Credited account");
             Category category = categoryRepository.getByTypeAndName(supplyBody.getAction(), supplyBody.getActionName());
             transaction.setIdCategory(category.getId());
-            transactionRepository.save(transaction);
             Transaction response = transactionRepository.save(transaction);
             idTransaction = response.getId();
         }
@@ -95,20 +92,15 @@ public class Functionnality {
             int idTransactionCredited;
 
             if (accountCredited.getIdBank() != accountDebited.getIdBank()) {
-                idTransactionCredited = makeSupply(new SupplyBody("Incoming", 0.0, idAccountCredited, "Other"));
+                idTransactionCredited = makeSupply(new SupplyBody("Incoming", amount, idAccountCredited, "Other"));
                 idTransactionDebited = makeSupply(new SupplyBody("Outgoing", amount, idAccountDebited, "Other"));
 
                 transactionRepository.updateEffectiveDateById(idTransactionCredited);
 
-                while (!verifyingDate(idTransactionCredited)) {
-                    try {
-                        Thread.sleep(120000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                return updateBalance(idAccountCredited, amount, idTransactionDebited, idTransactionCredited);
+                TransferHistory transferHistory = new TransferHistory();
+                transferHistory.setIdTransactionDebited(idTransactionDebited);
+                transferHistory.setIdTransactionCredited(idTransactionCredited);
+                return transferHistoryRepository.save(transferHistory);
             } else {
                 idTransactionCredited = makeSupply(new SupplyBody("Incoming", amount, idAccountCredited, "Other"));
                 idTransactionDebited = makeSupply(new SupplyBody("Outgoing", amount, idAccountDebited, "Other"));
@@ -121,18 +113,21 @@ public class Functionnality {
             throw new RuntimeException(e);
         }
     }
-
-    public boolean verifyingDate(int id){
-        Transaction transaction = transactionRepository.getOneById(id);
-        LocalDateTime currentDate = LocalDateTime.now();
-        return currentDate.toLocalDate() == transaction.getEffectiveDate();
+    
+    @Scheduled(cron = "0 * * * * *")
+    public void testScheduled() throws SQLException {
+        List<Transaction> transactions = transactionRepository.findAll();
+        for (Transaction transaction:transactions){
+            if(Objects.equals(transaction.getEffectiveDate(), LocalDate.now()) && !transaction.isStatus()){
+                transactionRepository.updateStatusById(transaction.getId());
+                UUID idAccount = UUID.fromString(transaction.getIdAccount());
+                double actualBalance = accountRepository.getOneById(idAccount).getBalance();
+                switch (transaction.getType()) {
+                    case "Outgoing", "Loan" -> accountRepository.updateById(idAccount, actualBalance - transaction.getAmount());
+                    case "Incoming" -> accountRepository.updateById(idAccount, actualBalance + transaction.getAmount());
+                }
+            }
+        }
     }
 
-    public TransferHistory updateBalance(UUID idAccountCredited, double amount, int idTransactionDebited, int idTransactionCredited) throws SQLException {
-        accountRepository.updateById(idAccountCredited, amount);
-        TransferHistory transferHistory = new TransferHistory();
-        transferHistory.setIdTransactionDebited(idTransactionDebited);
-        transferHistory.setIdTransactionCredited(idTransactionCredited);
-        return transferHistoryRepository.save(transferHistory);
-    }
 }
