@@ -8,6 +8,15 @@ public class SupplyBody {
     private double supplyAmount;
     private UUID idAccount;
      private String actionName;
+     private String label;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public String getActionName() {
         return actionName;
@@ -54,6 +63,14 @@ public class SupplyBody {
         this.idAccount = idAccount;
     }
 
+    public SupplyBody(String action, double supplyAmount, UUID idAccount, String actionName, String label) {
+        this.action = action;
+        this.supplyAmount = supplyAmount;
+        this.idAccount = idAccount;
+        this.actionName = actionName;
+        this.label = label;
+    }
+
     public SupplyBody() {
     }
 
@@ -61,12 +78,12 @@ public class SupplyBody {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SupplyBody that)) return false;
-        return Double.compare(getSupplyAmount(), that.getSupplyAmount()) == 0 && Objects.equals(getAction(), that.getAction()) && Objects.equals(getIdAccount(), that.getIdAccount()) && Objects.equals(getActionName(), that.getActionName());
+        return Double.compare(getSupplyAmount(), that.getSupplyAmount()) == 0 && Objects.equals(getAction(), that.getAction()) && Objects.equals(getIdAccount(), that.getIdAccount()) && Objects.equals(getActionName(), that.getActionName()) && Objects.equals(getLabel(), that.getLabel());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAction(), getSupplyAmount(), getIdAccount(), getActionName());
+        return Objects.hash(getAction(), getSupplyAmount(), getIdAccount(), getActionName(), getLabel());
     }
 
     @Override
@@ -76,6 +93,7 @@ public class SupplyBody {
                 ", supplyAmount=" + supplyAmount +
                 ", idAccount=" + idAccount +
                 ", actionName='" + actionName + '\'' +
+                ", label='" + label + '\'' +
                 '}';
     }
 }
