@@ -2,10 +2,7 @@ package com.example.PurseApp.Functionnality;
 
 import com.example.PurseApp.DataBaseConnection;
 import com.example.PurseApp.Entity.*;
-import com.example.PurseApp.Repository.AccountRepository;
-import com.example.PurseApp.Repository.CategoryRepository;
-import com.example.PurseApp.Repository.TransactionRepository;
-import com.example.PurseApp.Repository.TransferHistoryRepository;
+import com.example.PurseApp.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -31,13 +28,15 @@ public class Functionality {
     private final TransactionRepository transactionRepository;
     private final TransferHistoryRepository transferHistoryRepository;
     private final CategoryRepository categoryRepository;
+    private final ClientRepository clientRepository;
 
     @Autowired
-    public Functionality(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferHistoryRepository transferHistoryRepository, CategoryRepository categoryRepository) {
+    public Functionality(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferHistoryRepository transferHistoryRepository, CategoryRepository categoryRepository, ClientRepository clientRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.transferHistoryRepository = transferHistoryRepository;
         this.categoryRepository = categoryRepository;
+        this.clientRepository = clientRepository;
     }
 
     public int makeSupply(SupplyBody supplyBody) throws SQLException {
@@ -51,14 +50,21 @@ public class Functionality {
         transaction.setEffectiveDate(date);
         transaction.setIdAccount(supplyBody.getIdAccount().toString());
         transaction.setStatus(false);
+        transaction.setSituation("PENDING");
+        transaction.setLabel(supplyBody.getLabel());
 
-        if (supplyBody.getAction().equals("Loan") && creditAuthorization) {
+
+        if (supplyBody.getAction().equals("Loan") && creditAuthorization && actualBalance == 0) {
                 transaction.setType("Loan");
                 transaction.setDescription("make loan");
                 Category category = categoryRepository.getByTypeAndName(supplyBody.getAction(), supplyBody.getActionName());
                 transaction.setIdCategory(category.getId());
-                Transaction response = transactionRepository.save(transaction);
-                idTransaction = response.getId();
+                if(account.getMonthlyPay() / 3 >= actualBalance - supplyBody.getSupplyAmount()){
+                    Transaction response = transactionRepository.save(transaction);
+                    idTransaction = response.getId();
+                }else{
+                    return 0;
+                }
         } else if (supplyBody.getAction().equals("Outgoing") && !creditAuthorization) {
             if (actualBalance == 0) {
                 return 0;
@@ -117,7 +123,7 @@ public class Functionality {
     public void balanceValueScheduled() throws SQLException {
         List<Transaction> transactions = transactionRepository.findAll();
         for (Transaction transaction:transactions){
-            if(Objects.equals(transaction.getEffectiveDate(), LocalDate.now()) && !transaction.isStatus()){
+            if(Objects.equals(transaction.getEffectiveDate(), LocalDate.now()) && !transaction.isStatus() && transaction.getSituation().equals("PENDING")){
                 transactionRepository.updateStatusById(transaction.getId());
                 UUID idAccount = UUID.fromString(transaction.getIdAccount());
                 double actualBalance = accountRepository.getOneById(idAccount).getBalance();
