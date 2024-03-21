@@ -40,8 +40,10 @@ public class TransactionRepository implements CrudOperation<Transaction>{
                     String reference = result.getString("reference");
                     int idCategory = result.getInt("idcategory");
                     String idAccount = String.valueOf(UUID.fromString(result.getString("idaccount")));
+                    String label = result.getString("label");
+                    String situation = result.getString("situation");
 
-                    Transaction transaction = new Transaction(id,type, description, registrationDate, effectiveDate, amount, status, reference, idCategory, idAccount);
+                    Transaction transaction = new Transaction(id,type, description, registrationDate, effectiveDate, amount, status, reference, idCategory, idAccount, label, situation);
                     transactionList.add(transaction);
                 }
             }
@@ -60,7 +62,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
     public Transaction save(Transaction toSave) {
         int idTransaction = 0;
         try{
-            String query = "INSERT INTO transaction (type, description, effectivedate, amount, status, reference, idcategory, idaccount) values (?,?,?,?,?,?,?,CAST(? AS UUID))";
+            String query = "INSERT INTO transaction (type, description, effectivedate, amount, status, reference, idcategory, idaccount, label, situation) values (?,?,?,?,?,?,?,CAST(? AS UUID), ?, ?)";
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_ss");
             Date date = new Date();
             String dateFormatted = sdf.format(date);
@@ -73,6 +75,8 @@ public class TransactionRepository implements CrudOperation<Transaction>{
             preparedStatement.setString(6, "VIR_"+dateFormatted);
             preparedStatement.setInt(7, toSave.getIdCategory());
             preparedStatement.setString(8, String.valueOf(UUID.fromString(toSave.getIdAccount())));
+            preparedStatement.setString(9, toSave.getLabel());
+            preparedStatement.setString(10, toSave.getSituation());
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()){
@@ -119,6 +123,8 @@ public class TransactionRepository implements CrudOperation<Transaction>{
                 transaction.setReference(resultSet.getString("reference"));
                 transaction.setIdCategory(resultSet.getInt("idcategory"));
                 transaction.setIdAccount(resultSet.getString("idaccount"));
+                transaction.setLabel(resultSet.getString("label"));
+                transaction.setSituation(resultSet.getString("situation"));
 
                 return transaction;
             }else {
@@ -146,7 +152,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
 
     public void updateStatusById(int id){
         try{
-            String query = "UPDATE transaction SET status = true WHERE id = ?";
+            String query = "UPDATE transaction SET status = true ,situation = 'SUCCESS' WHERE id = ?";
             Transaction transaction = getOneById(id);
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, id);
