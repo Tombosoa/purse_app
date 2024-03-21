@@ -14,6 +14,24 @@ public class Transaction {
     private String reference;
     private int idCategory;
     private String idAccount;
+    private String label;
+    private String situation;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getSituation() {
+        return situation;
+    }
+
+    public void setSituation(String situation) {
+        this.situation = situation;
+    }
 
     public int getId() {
         return id;
@@ -111,16 +129,31 @@ public class Transaction {
     public Transaction() {
     }
 
+    public Transaction(int id, String type, String description, LocalDate registrationDate, LocalDate effectiveDate, double amount, boolean status, String reference, int idCategory, String idAccount, String label, String situation) {
+        this.id = id;
+        this.type = type;
+        this.description = description;
+        this.registrationDate = registrationDate;
+        this.effectiveDate = effectiveDate;
+        this.amount = amount;
+        this.status = status;
+        this.reference = reference;
+        this.idCategory = idCategory;
+        this.idAccount = idAccount;
+        this.label = label;
+        this.situation = situation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Transaction that)) return false;
-        return getId() == that.getId() && Double.compare(getAmount(), that.getAmount()) == 0 && isStatus() == that.isStatus() && getIdCategory() == that.getIdCategory() && Objects.equals(getType(), that.getType()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getRegistrationDate(), that.getRegistrationDate()) && Objects.equals(getEffectiveDate(), that.getEffectiveDate()) && Objects.equals(getReference(), that.getReference()) && Objects.equals(getIdAccount(), that.getIdAccount());
+        return getId() == that.getId() && Double.compare(getAmount(), that.getAmount()) == 0 && isStatus() == that.isStatus() && getIdCategory() == that.getIdCategory() && Objects.equals(getType(), that.getType()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getRegistrationDate(), that.getRegistrationDate()) && Objects.equals(getEffectiveDate(), that.getEffectiveDate()) && Objects.equals(getReference(), that.getReference()) && Objects.equals(getIdAccount(), that.getIdAccount()) && Objects.equals(getLabel(), that.getLabel()) && Objects.equals(getSituation(), that.getSituation());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getType(), getDescription(), getRegistrationDate(), getEffectiveDate(), getAmount(), isStatus(), getReference(), getIdCategory(), getIdAccount());
+        return Objects.hash(getId(), getType(), getDescription(), getRegistrationDate(), getEffectiveDate(), getAmount(), isStatus(), getReference(), getIdCategory(), getIdAccount(), getLabel(), getSituation());
     }
 
     @Override
@@ -136,6 +169,8 @@ public class Transaction {
                 ", reference='" + reference + '\'' +
                 ", idCategory=" + idCategory +
                 ", idAccount='" + idAccount + '\'' +
+                ", label='" + label + '\'' +
+                ", situation='" + situation + '\'' +
                 '}';
     }
 }
