@@ -64,6 +64,7 @@ margin-bottom: 30px;
     padding-left: 5%;
     font-size: 15px;
     margin-bottom: 13%;
+    outline: none;
 
 
 }
@@ -73,7 +74,8 @@ margin-bottom: 30px;
     height: 5vh;
     color: rgba(0, 0, 0, 0.508);
     font-size: 15px;
-    border: 0.5px rgba(0, 0, 0, 0.168) solid
+    border: 0.5px rgba(0, 0, 0, 0.168) solid;
+    outline: none;
 }
 .symbol{
     width: 15%;
