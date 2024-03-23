@@ -141,7 +141,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
             Transaction transaction = getOneById(id);
             LocalDateTime registrationDate = transaction.getRegistrationDate().atTime(LocalTime.now());
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setObject(1, registrationDate.plusDays(1));
+            preparedStatement.setObject(1, registrationDate.plusDays(2));
             preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
@@ -156,6 +156,37 @@ public class TransactionRepository implements CrudOperation<Transaction>{
             Transaction transaction = getOneById(id);
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String canceledTransaction(int id){
+        String situation = getOneById(id).getSituation();
+        try{
+            String query = "UPDATE transaction SET situation = 'CANCELED' WHERE id = ?";
+            if (situation.equals("SUCCESS")){
+                return "Can't canceled this transaction";
+            }else {
+                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                preparedStatement.setInt(1, id);
+
+                preparedStatement.executeUpdate();
+                return "Transaction canceled";
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateEffectiveDate(int id, LocalDate newEffectiveDate){
+        try{
+            String query = "UPDATE transaction SET effectiveDate = ? WHERE id  = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setObject(1, newEffectiveDate);
+            preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
