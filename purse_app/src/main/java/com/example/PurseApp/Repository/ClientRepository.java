@@ -65,6 +65,7 @@ public class ClientRepository implements CrudOperation<Client> {
 
     @Override
     public Client save(Client toSave) {
+        String idClient;
         try {
             String query = "INSERT INTO client (firstname, lastname, birthdate, monthlypay) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
@@ -73,6 +74,11 @@ public class ClientRepository implements CrudOperation<Client> {
             preparedStatement.setDate(3, toSave.getBirthdate());
             preparedStatement.setDouble(4, toSave.getMonthlyPay());
             preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()){
+                idClient = generatedKeys.getString(1);
+                toSave.setId(idClient);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
