@@ -2,7 +2,10 @@ package com.example.PurseApp.Repository;
 
 import com.example.PurseApp.DataBaseConnection;
 import com.example.PurseApp.Entity.Account;
+import com.example.PurseApp.Entity.ApplyInterest;
+import com.example.PurseApp.Entity.Interest;
 import jakarta.el.PropertyNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.plaf.nimbus.State;
@@ -19,6 +22,15 @@ public class AccountRepository implements CrudOperation<Account>{
     DataBaseConnection dbConnection = new DataBaseConnection(userName, password, databaseName);
     Connection conn = dbConnection.getConnection();
     public Statement statement;
+    private final InterestRepository interestRepository;
+    private final ApplyInterestRepository applyInterestRepository;
+
+    @Autowired
+    public AccountRepository(InterestRepository interestRepository, ApplyInterestRepository applyInterestRepository) {
+        this.interestRepository = interestRepository;
+        this.applyInterestRepository = applyInterestRepository;
+    }
+
     @Override
     public List<Account> findAll() {
         List<Account> accountList = new ArrayList<>();
@@ -124,6 +136,35 @@ public class AccountRepository implements CrudOperation<Account>{
             preparedStatement.setObject(2, id);
             preparedStatement.executeUpdate();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateCreditAuthorization(UUID id, double newCount){
+        try{
+            String query = "UPDATE account SET creditauthorization = true WHERE id = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            Account account = getOneById(id);
+            if(!account.isCreditAuthorization()){
+                preparedStatement.setObject(1, id);
+
+                preparedStatement.executeUpdate();
+                Interest interest = new Interest();
+                interest.setCounts(0.0);
+                interest.setDayGone(0);
+                Interest interestSaved = interestRepository.save(interest);
+                int idInterest = interestSaved.getId();
+                ApplyInterest applyInterest = new ApplyInterest();
+                applyInterest.setIdAccount(id);
+                applyInterest.setActualDue(0.0);
+                applyInterest.setIdInterest(idInterest);
+                applyInterest.setStartDate(null);
+                applyInterest.setFirstDue(0.0);
+                applyInterestRepository.save(applyInterest);
+
+                interestRepository.updateInterestCount(idInterest, newCount);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
