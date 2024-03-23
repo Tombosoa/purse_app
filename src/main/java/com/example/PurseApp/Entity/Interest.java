@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Interest {
     private int id;
-    private double count;
+    private double counts;
     private int dayGone;
 
     public int getId() {
@@ -15,12 +15,12 @@ public class Interest {
         this.id = id;
     }
 
-    public double getCount() {
-        return count;
+    public double getCounts() {
+        return counts;
     }
 
-    public void setCount(double count) {
-        this.count = count;
+    public void setCounts(double counts) {
+        this.counts = counts;
     }
 
     public int getDayGone() {
@@ -31,33 +31,33 @@ public class Interest {
         this.dayGone = dayGone;
     }
 
-    public Interest(int id, double count, int dayGone) {
+    public Interest(int id, double counts, int dayGone) {
         this.id = id;
-        this.count = count;
+        this.counts = counts;
         this.dayGone = dayGone;
     }
 
     public Interest() {
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Interest interest)) return false;
-        return getId() == interest.getId() && Double.compare(getCount(), interest.getCount()) == 0 && getDayGone() == interest.getDayGone();
+        return getId() == interest.getId() && Double.compare(getCounts(), interest.getCounts()) == 0 && getDayGone() == interest.getDayGone();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCount(), getDayGone());
+        return Objects.hash(getId(), getCounts(), getDayGone());
     }
+
 
     @Override
     public String toString() {
         return "Interest{" +
                 "id=" + id +
-                ", count=" + count +
+                ", counts=" + counts +
                 ", dayGone=" + dayGone +
                 '}';
     }
