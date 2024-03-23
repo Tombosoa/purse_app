@@ -68,7 +68,7 @@ public class ClientRepository implements CrudOperation<Client> {
         String idClient;
         try {
             String query = "INSERT INTO client (firstname, lastname, birthdate, monthlypay) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, toSave.getFirstname());
             preparedStatement.setString(2, toSave.getLastname());
             preparedStatement.setDate(3, toSave.getBirthdate());

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
@@ -31,12 +32,18 @@ public class TransferHistoryRepository implements CrudOperation<TransferHistory>
 
     @Override
     public TransferHistory save(TransferHistory toSave) {
+        int id = 0;
         try{
             String query = "INSERT INTO transferHistory (idtransactioncredited, idtransactiondebited) values (?,?)";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, toSave.getIdTransactionCredited());
             preparedStatement.setInt(2, toSave.getIdTransactionDebited());
             preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()){
+                id = generatedKeys.getInt(1);
+                toSave.setId(id);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
