@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,14 +31,18 @@ public class Functionality {
     private final TransferHistoryRepository transferHistoryRepository;
     private final CategoryRepository categoryRepository;
     private final ClientRepository clientRepository;
+    private final ApplyInterestRepository applyInterestRepository;
+    private final InterestRepository interestRepository;
 
     @Autowired
-    public Functionality(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferHistoryRepository transferHistoryRepository, CategoryRepository categoryRepository, ClientRepository clientRepository) {
+    public Functionality(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferHistoryRepository transferHistoryRepository, CategoryRepository categoryRepository, ClientRepository clientRepository, ApplyInterestRepository applyInterestRepository, InterestRepository interestRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.transferHistoryRepository = transferHistoryRepository;
         this.categoryRepository = categoryRepository;
         this.clientRepository = clientRepository;
+        this.applyInterestRepository = applyInterestRepository;
+        this.interestRepository = interestRepository;
     }
 
     public int makeSupply(SupplyBody supplyBody) throws SQLException {
@@ -54,7 +60,7 @@ public class Functionality {
         transaction.setLabel(supplyBody.getLabel());
 
 
-        if (supplyBody.getAction().equals("Loan") && creditAuthorization && actualBalance == 0) {
+        if (supplyBody.getAction().equals("Loan") && creditAuthorization && (actualBalance >= 0)) {
                 transaction.setType("Loan");
                 transaction.setDescription("make loan");
                 Category category = categoryRepository.getByTypeAndName(supplyBody.getAction(), supplyBody.getActionName());
@@ -62,6 +68,19 @@ public class Functionality {
                 if(account.getMonthlyPay() / 3 >= actualBalance - supplyBody.getSupplyAmount()){
                     Transaction response = transactionRepository.save(transaction);
                     idTransaction = response.getId();
+                    ApplyInterest applyInterest = applyInterestRepository.getByAccountId(supplyBody.getIdAccount());
+                    int idInterest = applyInterest.getIdInterest();
+                    int idApplyInterest = applyInterest.getId();
+                    Interest interest = interestRepository.getOneById(idInterest);
+                    LocalDate startDate = LocalDate.now();
+                    if(actualBalance == 0){
+                        double actualDue = interest.getCounts() * interest.getDayGone() * supplyBody.getSupplyAmount();
+                        applyInterestRepository.updateById(idApplyInterest, startDate, actualDue, supplyBody.getSupplyAmount());
+                    }else if(actualBalance < supplyBody.getSupplyAmount()){
+                        double firstDue = supplyBody.getSupplyAmount() - actualBalance;
+                        double actualDue =  interest.getCounts() * interest.getDayGone() * firstDue;
+                        applyInterestRepository.updateById(idApplyInterest, startDate, actualDue, firstDue);
+                    }
                 }else{
                     return 0;
                 }
@@ -119,6 +138,24 @@ public class Functionality {
         }
     }
 
+    public List<TransferHistory> multiTransfer(double amount, UUID idAccountDebited, List<UUID> idAccountCreditedList){
+        List<TransferHistory> result = new ArrayList<>();
+        for (UUID idAccountCredited:idAccountCreditedList){
+            TransferHistory res = makeTransfer(amount, idAccountCredited,idAccountDebited);
+            result.add(res);
+        }
+        return result;
+    }
+
+    public TransferHistory scheduledTransfer(double amount, UUID idAccountCredited, UUID idAccountDebited, LocalDate newEffectiveDate){
+        TransferHistory result = makeTransfer(amount, idAccountCredited, idAccountDebited);
+        int idTransactionCredited = result.getIdTransactionCredited();
+        int idTransactionDebited = result.getIdTransactionDebited();
+        transactionRepository.updateEffectiveDate(idTransactionCredited, newEffectiveDate);
+        transactionRepository.updateEffectiveDate(idTransactionDebited, newEffectiveDate);
+        return result;
+    }
+
     @Scheduled(cron = "0 * * * * *")
     public void balanceValueScheduled() throws SQLException {
         List<Transaction> transactions = transactionRepository.findAll();
@@ -132,6 +169,24 @@ public class Functionality {
                     case "Incoming" -> accountRepository.updateById(idAccount, actualBalance + transaction.getAmount());
                 }
             }
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void countScheduled(){
+        List<Interest> interests = interestRepository.findAll();
+        for(Interest interest:interests){
+            ApplyInterest applyInterest = applyInterestRepository.getOneByInterestId(interest.getId());
+            LocalDate currentDate = LocalDate.now();
+            LocalDate startDate = applyInterest.getStartDate();
+            int dayGone = (int) ChronoUnit.DAYS.between(startDate, currentDate);
+            interestRepository.updateInterestDayGone(interest.getId(), dayGone);
+            if(interest.getDayGone() == 8){
+                double actualCount = interest.getCounts();
+                interestRepository.updateInterestCount(interest.getId(),actualCount + 0.02);
+            }
+            double actualDue = interest.getDayGone() * interest.getCounts() * applyInterest.getFirstDue() + applyInterest.getFirstDue();
+            applyInterestRepository.updateActualDue(applyInterest.getId(), actualDue);
         }
     }
 }
