@@ -5,7 +5,7 @@ import "./Formulaire.css";
 
 const Formulaire = () => {
   return (
-    <div className="container">
+    <div className="containers">
         <form action="#">
             <h1>Form</h1>
             <div className="details">
