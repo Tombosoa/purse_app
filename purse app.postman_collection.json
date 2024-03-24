@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "2f8d67f4-b819-4390-ba91-ac47a0ff958c",
+		"name": "purse app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"John\",\n  \"lastname\": \"Doe\",\n  \"birthdate\": \"1980-01-01\",\n  \"monthlyPay\": 5000.00\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Updated\",\n  \"lastname\": \"Name\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/update"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Updated\",\n  \"lastname\": \"Name\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "{id}",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": []
+		},
+		{
+			"name": "Bank",
+			"item": []
+		},
+		{
+			"name": "Transaction",
+			"item": []
+		},
+		{
+			"name": "Functionality",
+			"item": []
+		}
+	]
+}
