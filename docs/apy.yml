@@ -14,6 +14,7 @@ tags:
   - name: Interest
   - name: TransferHistory
   - name: Functionnality
+  - name: ApplyInterest
 paths:
   /client/all:
     get:
@@ -1020,7 +1021,53 @@ paths:
                         items:
                           type: string
                         example: "Canceled successfuly"
-
+  /applyInterest/new:
+    post: 
+      tags:
+        - "ApplyInterest"
+      summary: add a new apply interest 
+      operationId: newApplyInterest
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/ApplyInterest"
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/ApplyInterest'
+ 
+  /applyInterest/getOne:
+    get: 
+      tags:
+        - "ApplyInterest"
+      summary: get one apply interest
+      operationId: getOneaApplyInterest
+      parameters:
+        - name: id 
+          in: query
+          required: true
+          schema: 
+            type: number
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/ApplyInterest'
+ 
 
 components:
   schemas:
@@ -1158,6 +1205,24 @@ components:
             - Unknown
         label:
           type: string
+    ApplyInterest:
+      type: object
+      properties:
+        id: 
+          type: number
+        idAccount:
+          type: string 
+        idInterest:
+          type: number
+        startDate:
+          type: string
+          format: date
+        firstDue:
+          type: number
+          format: double
+        actualDue:
+          type: number
+          format: double
     Exception:
       type: object
       properties:
