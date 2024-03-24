@@ -5,3 +5,4 @@ CREATE TABLE IF NOT EXISTS Client(
     birthdate date,
     monthlyPay double precision
 );
+CREATE INDEX Client_firstname_index ON Client (firstname);
