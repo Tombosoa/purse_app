@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/transaction")
@@ -25,5 +26,12 @@ public class TransactionController {
     @PostMapping("/new")
     public Transaction saveTransaction(@RequestBody Transaction toSave){
         return transactionRepository.save(toSave);
+    }
+
+    @GetMapping("/byAccountId")
+    public Transaction getOneByAccountId(
+            @RequestParam UUID id
+            ){
+        return transactionRepository.getByAccountId(id);
     }
 }
