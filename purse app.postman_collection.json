@@ -349,6 +349,52 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Interest",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get interest by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/getOne?id=interest_id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getOne"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "interest_id"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create new interest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ApplyInterest",
+			"item": []
 		}
 	]
 }
