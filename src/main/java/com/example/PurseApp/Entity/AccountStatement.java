@@ -7,8 +7,8 @@ public class AccountStatement {
     private LocalDate effectiveDate;
     private String reference;
     private String motif;
-    private double CreditMGA;
-    private double DebitMGA;
+    private double creditMGA;
+    private double debitMGA;
     private double balance;
 
     public LocalDate getEffectiveDate() {
@@ -36,19 +36,19 @@ public class AccountStatement {
     }
 
     public double getCreditMGA() {
-        return CreditMGA;
+        return creditMGA;
     }
 
     public void setCreditMGA(double creditMGA) {
-        CreditMGA = creditMGA;
+        this.creditMGA = creditMGA;
     }
 
     public double getDebitMGA() {
-        return DebitMGA;
+        return debitMGA;
     }
 
     public void setDebitMGA(double debitMGA) {
-        DebitMGA = debitMGA;
+        this.debitMGA = debitMGA;
     }
 
     public double getBalance() {
@@ -63,8 +63,8 @@ public class AccountStatement {
         this.effectiveDate = effectiveDate;
         this.reference = reference;
         this.motif = motif;
-        CreditMGA = creditMGA;
-        DebitMGA = debitMGA;
+        this.creditMGA = creditMGA;
+        this.debitMGA = debitMGA;
         this.balance = balance;
     }
 
@@ -89,8 +89,8 @@ public class AccountStatement {
                 "effectiveDate=" + effectiveDate +
                 ", reference='" + reference + '\'' +
                 ", motif='" + motif + '\'' +
-                ", CreditMGA=" + CreditMGA +
-                ", DebitMGA=" + DebitMGA +
+                ", creditMGA=" + creditMGA +
+                ", debitMGA=" + debitMGA +
                 ", balance=" + balance +
                 '}';
     }
