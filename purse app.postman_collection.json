@@ -215,7 +215,140 @@
 		},
 		{
 			"name": "Functionality",
-			"item": []
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get Statement",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/getStatement?idAccount=id_account",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getStatement"
+									],
+									"query": [
+										{
+											"key": "idAccount",
+											"value": "id_account"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Make supply",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 1000.00,\n  \"idAccount\": \"account_id\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/makeSupply"
+					},
+					"response": []
+				},
+				{
+					"name": "Make transfert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transfer?amount=montant&idAccountDebited=id_compte_debité&idAccountCreditedList=liste_id_comptes_crédités",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transfer"
+							],
+							"query": [
+								{
+									"key": "amount",
+									"value": "montant"
+								},
+								{
+									"key": "idAccountDebited",
+									"value": "id_compte_debité"
+								},
+								{
+									"key": "idAccountCreditedList",
+									"value": "liste_id_comptes_crédités"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Scheduled Transfer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "/scheduledTransfer?amount=montant&idAccountDebited=id_compte_debité&idAccountCredited=id_compte_crédité&newEffectiveDate=nouvelle_date_effective",
+							"path": [
+								"scheduledTransfer"
+							],
+							"query": [
+								{
+									"key": "amount",
+									"value": "montant"
+								},
+								{
+									"key": "idAccountDebited",
+									"value": "id_compte_debité"
+								},
+								{
+									"key": "idAccountCredited",
+									"value": "id_compte_crédité"
+								},
+								{
+									"key": "newEffectiveDate",
+									"value": "nouvelle_date_effective"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Canceled Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/canceledTransaction?id=id_transaction",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"canceledTransaction"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "id_transaction"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
