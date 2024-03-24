@@ -9,7 +9,21 @@
 			"name": "Client",
 			"item": [
 				{
-					"name": "All",
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get Client by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/{id}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get all client",
 					"request": {
 						"method": "GET",
 						"header": []
@@ -17,7 +31,7 @@
 					"response": []
 				},
 				{
-					"name": "new",
+					"name": "Create new client",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -35,7 +49,7 @@
 					"response": []
 				},
 				{
-					"name": "update",
+					"name": "Update new Client",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -53,7 +67,7 @@
 					"response": []
 				},
 				{
-					"name": "delete",
+					"name": "Delete Client",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -69,14 +83,6 @@
 						"url": "{{base_url}}/delete"
 					},
 					"response": []
-				},
-				{
-					"name": "{id}",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
 				}
 			]
 		},
@@ -84,7 +90,7 @@
 			"name": "Account",
 			"item": [
 				{
-					"name": "All",
+					"name": "Get all Account",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -93,7 +99,7 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "Create new Account",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -111,7 +117,7 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "Update Account",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -143,7 +149,7 @@
 			"name": "Bank",
 			"item": [
 				{
-					"name": "all",
+					"name": "Get all Bank",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -152,7 +158,7 @@
 					"response": []
 				},
 				{
-					"name": "new",
+					"name": "Create new Bank",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -172,7 +178,40 @@
 		},
 		{
 			"name": "Transaction",
-			"item": []
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get transaction by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/byAccountId"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get all transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create new transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Functionality",
