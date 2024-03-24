@@ -9,7 +9,21 @@
 			"name": "Client",
 			"item": [
 				{
-					"name": "All",
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get Client by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/{id}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get all client",
 					"request": {
 						"method": "GET",
 						"header": []
@@ -17,7 +31,7 @@
 					"response": []
 				},
 				{
-					"name": "new",
+					"name": "Create new client",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -35,13 +49,13 @@
 					"response": []
 				},
 				{
-					"name": "update",
+					"name": "Update new Client",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Updated\",\n  \"lastname\": \"Name\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
+							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Rakoto\",\n  \"lastname\": \"Nante\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,13 +67,13 @@
 					"response": []
 				},
 				{
-					"name": "delete",
+					"name": "Delete Client",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Updated\",\n  \"lastname\": \"Name\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
+							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Rakoto\",\n  \"lastname\": \"Nante\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -69,32 +83,364 @@
 						"url": "{{base_url}}/delete"
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
 				{
-					"name": "{id}",
+					"name": "Get all Account",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": "{{base_url}}/all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create new Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"1\",\n  \"balance\": 1000.00,\n  \"creditAuthorization\": true,\n  \"idClient\": \"client_id\",\n  \"idBank\": 123,\n  \"name\": \"Account Name\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Account",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/creditAuthorization?id=account_id&newCount=new_credit_authorization_count",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"creditAuthorization"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "account_id"
+								},
+								{
+									"key": "newCount",
+									"value": "new_credit_authorization_count"
+								}
+							]
+						}
 					},
 					"response": []
 				}
 			]
 		},
 		{
-			"name": "Account",
-			"item": []
-		},
-		{
 			"name": "Bank",
-			"item": []
+			"item": [
+				{
+					"name": "Get all Bank",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create new Bank",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"name\": \"BMOI\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Transaction",
-			"item": []
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get transaction by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/byAccountId"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get all transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create new transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Functionality",
-			"item": []
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get Statement",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/getStatement?idAccount=id_account",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getStatement"
+									],
+									"query": [
+										{
+											"key": "idAccount",
+											"value": "id_account"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Make supply",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 1000.00,\n  \"idAccount\": \"account_id\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/makeSupply"
+					},
+					"response": []
+				},
+				{
+					"name": "Make transfert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transfer?amount=montant&idAccountDebited=id_compte_debité&idAccountCreditedList=liste_id_comptes_crédités",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transfer"
+							],
+							"query": [
+								{
+									"key": "amount",
+									"value": "montant"
+								},
+								{
+									"key": "idAccountDebited",
+									"value": "id_compte_debité"
+								},
+								{
+									"key": "idAccountCreditedList",
+									"value": "liste_id_comptes_crédités"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Scheduled Transfer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "/scheduledTransfer?amount=montant&idAccountDebited=id_compte_debité&idAccountCredited=id_compte_crédité&newEffectiveDate=nouvelle_date_effective",
+							"path": [
+								"scheduledTransfer"
+							],
+							"query": [
+								{
+									"key": "amount",
+									"value": "montant"
+								},
+								{
+									"key": "idAccountDebited",
+									"value": "id_compte_debité"
+								},
+								{
+									"key": "idAccountCredited",
+									"value": "id_compte_crédité"
+								},
+								{
+									"key": "newEffectiveDate",
+									"value": "nouvelle_date_effective"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Canceled Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/canceledTransaction?id=id_transaction",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"canceledTransaction"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "id_transaction"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Interest",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Get interest by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/getOne?id=interest_id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getOne"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "interest_id"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create new interest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ApplyInterest",
+			"item": [
+				{
+					"name": "{id}",
+					"item": []
+				},
+				{
+					"name": "Get apply interest by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/getOne?id=interest_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getOne"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "interest_id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new apply interest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"idAccount\": \"account_id\",\n  \"idInterest\": 123,\n  \"startDate\": \"2024-03-24\",\n  \"firstDue\": 100.00,\n  \"actualDue\": 200.00\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
