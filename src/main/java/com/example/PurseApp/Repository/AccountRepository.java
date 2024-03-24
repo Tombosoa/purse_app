@@ -99,7 +99,7 @@ public class AccountRepository implements CrudOperation<Account>{
         newStatement.setDouble(1, amount);
         newStatement.setObject(2, idAccount);
         newStatement.executeUpdate();
-        return null;
+        return getOneById(idAccount);
     }
 
     public Account getOneById(UUID id){
