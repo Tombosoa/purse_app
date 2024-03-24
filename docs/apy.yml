@@ -13,6 +13,7 @@ tags:
   - name: Category
   - name: Interest
   - name: TransferHistory
+  - name: Functionnality
 paths:
   /client/all:
     get:
@@ -238,6 +239,32 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Account'
+
+  /client/creditAuthorization:
+    put:
+      tags:
+        - "Account"
+      summary: enable an account to make a credit 
+      operationId: creditAuthorization 
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: newCount
+          in: query
+          required: true
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: success 
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: success
 
 #-----------------Bank-----------------
   /bank/all:
@@ -799,6 +826,149 @@ paths:
                       body:
                         $ref: '#/components/schemas/TransferHistory'
 
+  /makeSupply:
+    post:
+      tags:
+        - "Functionnality"
+      summary: make supply on account
+      operationId: makeSupply 
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/SupplyBody"
+      responses:
+        '200':
+          description: success 
+          content: 
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id: 
+                    type: number
+
+  /transfer:
+    post:   
+      tags:
+        - "Functionnality"
+      summary: make transfer between two account
+      operationId: transfer
+      parameters:
+        - name: amount
+          in: query
+          description: amount to transfer
+          required: true
+          schema: 
+            type: number
+        - name: idAccountDebited
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: idAccountCredited
+          in: query
+          required: true
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/TransferHistory"
+          
+  /multiTransfer:
+    post: 
+      tags:
+        - "Functionnality"
+      summary: make multiple transfer between two account
+      operationId: multiTransfer
+      parameters:
+        - name: amount
+          in: query
+          description: amount to transfer
+          required: true
+          schema: 
+            type: number
+        - name: idAccountDebited
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: idAccountCreditedList
+          in: query
+          required: true
+          schema: 
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/TransferHistory"
+  /scheduledTransfer:
+    post:   
+      tags:
+        - "Functionnality"
+      summary: make scheduled transfer between two account
+      operationId: scheduledTransfer
+      parameters:
+        - name: amount
+          in: query
+          description: amount to transfer
+          required: true
+          schema: 
+            type: number
+        - name: idAccountDebited
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: idAccountCredited
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: newEffectiveDate
+          in: query
+          required: true
+          schema: 
+            type: string
+            format: date
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/TransferHistory"
+ 
+  /canceledTransaction:
+    post:
+      tags:
+        - "Functionnality"
+      summary: canceled a transaction 
+      operationId: canceledTransaction 
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: 'success'
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: "canceled successfuly"
+
 
 components:
   schemas:
@@ -905,8 +1075,37 @@ components:
           type: string
         idAccountCredited:
           type: string
-        transaction:
-          $ref: "#/components/schemas/Transaction"
+    SupplyBody:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+            - Outgoing
+            - Incoming
+            - Loan
+        supplyAmont:
+          type: number
+          format: double
+        idAccount:
+          type: string
+        actionName:
+          type: string
+          enum:
+            - Food_and_Drinks
+            - Online_Shopping
+            - Housing
+            - Transportation
+            - Vehicle
+            - Leisure
+            - Multimedia_and_Computers
+            - Financial_Expenses
+            - Investments
+            - Income
+            - Other
+            - Unknown
+        label:
+          type: string
     Exception:
       type: object
       properties:
