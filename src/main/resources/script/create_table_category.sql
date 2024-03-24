@@ -23,3 +23,4 @@ CREATE TABLE IF NOT EXISTS category (
     name category_enum,
     description VARCHAR(255)
 );
+CREATE INDEX category_name_index ON category (name);

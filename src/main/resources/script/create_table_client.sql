@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS Client(
     firstname varchar(255),
     lastname varchar(255),
     birthdate date,
-    monthlyPay double precision
+    monthly_pay double precision
 );
+CREATE INDEX Client_firstname_index ON Client (firstname);
