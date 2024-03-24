@@ -394,7 +394,53 @@
 		},
 		{
 			"name": "ApplyInterest",
-			"item": []
+			"item": [
+				{
+					"name": "{id}",
+					"item": []
+				},
+				{
+					"name": "Get apply interest by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/getOne?id=interest_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getOne"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "interest_id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new apply interest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"idAccount\": \"account_id\",\n  \"idInterest\": 123,\n  \"startDate\": \"2024-03-24\",\n  \"firstDue\": 100.00,\n  \"actualDue\": 200.00\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
