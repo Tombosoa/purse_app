@@ -3,13 +3,12 @@ package com.example.PurseApp.Functionnality;
 import com.example.PurseApp.DataBaseConnection;
 import com.example.PurseApp.Entity.*;
 import com.example.PurseApp.Repository.*;
+import jakarta.el.PropertyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -155,6 +154,32 @@ public class Functionality {
         transactionRepository.updateEffectiveDate(idTransactionDebited, newEffectiveDate);
         return result;
     }
+    public List<AccountStatement> getAccountStatementByAccountId(UUID idAccount) {
+        List<AccountStatement> accountStatements = new ArrayList<>();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(
+                "select effectivedate, reference, label as motif, balance, " +
+                        "case when description = 'Credited account' then amount else 0 end as creditMga, " +
+                        "case when description = 'Debited account' then amount else 0 end as debitMga " +
+                        "from transaction inner join account on account.id = transaction.idaccount where idaccount=?")) {
+            preparedStatement.setObject(1, idAccount);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    LocalDate effectiveDate = resultSet.getDate("effectivedate").toLocalDate();
+                    String reference = resultSet.getString("reference");
+                    String motif = resultSet.getString("motif");
+                    double creditMGA = resultSet.getDouble("creditMga");
+                    double debitMGA = resultSet.getDouble("debitMga");
+                    double balance = resultSet.getDouble("balance");
+                    AccountStatement accountStatement = new AccountStatement(effectiveDate, reference, motif, creditMGA, debitMGA, balance);
+                    accountStatements.add(accountStatement);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return accountStatements;
+    }
+
 
     @Scheduled(cron = "0 * * * * *")
     public void balanceValueScheduled() throws SQLException {
