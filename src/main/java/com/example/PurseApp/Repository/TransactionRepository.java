@@ -128,7 +128,38 @@ public class TransactionRepository implements CrudOperation<Transaction>{
 
                 return transaction;
             }else {
-                throw new PropertyNotFoundException("Account not found with id: " + id);
+                throw new PropertyNotFoundException("not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Transaction getByAccountId(UUID id){
+        try {
+            String query = "SELECT * FROM transaction WHERE idaccount = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setObject(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                Transaction transaction = new Transaction();
+                transaction.setId(resultSet.getInt("id"));
+                transaction.setType(resultSet.getString("type"));
+                transaction.setDescription(resultSet.getString("description"));
+                transaction.setRegistrationDate(resultSet.getDate("registrationdate").toLocalDate());
+                transaction.setEffectiveDate(resultSet.getDate("effectivedate").toLocalDate());
+                transaction.setAmount(resultSet.getDouble("amount"));
+                transaction.setStatus(resultSet.getBoolean("status"));
+                transaction.setReference(resultSet.getString("reference"));
+                transaction.setIdCategory(resultSet.getInt("idcategory"));
+                transaction.setIdAccount(resultSet.getString("idaccount"));
+                transaction.setLabel(resultSet.getString("label"));
+                transaction.setSituation(resultSet.getString("situation"));
+
+                return transaction;
+            }else {
+                throw new PropertyNotFoundException("not found");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
