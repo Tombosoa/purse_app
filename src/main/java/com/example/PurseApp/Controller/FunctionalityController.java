@@ -1,14 +1,12 @@
 package com.example.PurseApp.Controller;
 
+import com.example.PurseApp.Entity.AccountStatement;
 import com.example.PurseApp.Entity.SupplyBody;
 import com.example.PurseApp.Entity.TransferHistory;
 import com.example.PurseApp.Functionnality.Functionality;
 import com.example.PurseApp.Repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -64,5 +62,12 @@ public class FunctionalityController {
               @RequestParam int id
     ){
         return transactionRepository.canceledTransaction(id);
+    }
+
+    @GetMapping("/getStatement")
+    public List<AccountStatement> getStatement(
+           @RequestParam UUID idAccount
+    ){
+        return functionality.getAccountStatementByAccountId(idAccount);
     }
 }
