@@ -35,4 +35,11 @@ public class AccountController {
     ){
         accountRepository.updateCreditAuthorization(id, newCount);
     }
+
+    @GetMapping("/{idClient}")
+    public List<Account> getByClientId(
+            @PathVariable UUID idClient
+    ){
+        return accountRepository.getByClientId(idClient);
+    }
 }
