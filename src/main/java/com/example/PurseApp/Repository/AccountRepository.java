@@ -35,18 +35,18 @@ public class AccountRepository implements CrudOperation<Account>{
     public List<Account> findAll() {
         List<Account> accountList = new ArrayList<>();
         try (Statement statement = conn.createStatement()){
-            String query = "select account.id as id, firstname, lastname, birthdate, monthlypay, balance, creditauthorization, bank.name, client.id as idclient from client inner join account on client.id = account.idclient inner join bank on bank.id = account.idbank";
+            String query = "select account.id as id, firstname, lastname, birthdate, monthly_pay, balance, credit_authorization, bank.name, client.id as id_client from client inner join account on client.id = account.id_client inner join bank on bank.id = account.id_bank";
             try (ResultSet resultSet = statement.executeQuery(query)){
                 while (resultSet.next()){
                     String id = resultSet.getString("id");
                     String firstname = resultSet.getString("firstname");
                     String lastname = resultSet.getString("lastname");
                     Date birthdate = resultSet.getDate("birthdate");
-                    double monthlyPay = resultSet.getDouble("monthlypay");
+                    double monthlyPay = resultSet.getDouble("monthly_pay");
                     double balance = resultSet.getDouble("balance");
-                    boolean creditAuthorization = resultSet.getBoolean("creditauthorization");
+                    boolean creditAuthorization = resultSet.getBoolean("credit_authorization");
                     String name = resultSet.getString("name");
-                    String idClient = resultSet.getString("idclient");
+                    String idClient = resultSet.getString("id_client");
 
                     Account account = new Account(id, firstname, lastname, birthdate, monthlyPay, balance, creditAuthorization, name, idClient);
                     accountList.add(account);
@@ -66,7 +66,7 @@ public class AccountRepository implements CrudOperation<Account>{
     @Override
     public Account save(Account toSave) {
         try{
-            String query = "INSERT INTO account (balance, idclient, idbank) VALUES (?,CAST(? AS UUID),?)";
+            String query = "INSERT INTO account (balance, id_client, id_bank) VALUES (?,CAST(? AS UUID),?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setDouble(1, toSave.getBalance());
             preparedStatement.setString(2, String.valueOf(UUID.fromString(toSave.getIdClient())));
@@ -114,9 +114,9 @@ public class AccountRepository implements CrudOperation<Account>{
                 Account account = new Account();
                 account.setId(resultSet.getString("id"));
                 account.setBalance(resultSet.getDouble("balance"));
-                account.setCreditAuthorization(resultSet.getBoolean("creditauthorization"));
-                account.setIdBank(resultSet.getInt("idbank"));
-                account.setIdClient(resultSet.getString("idclient"));
+                account.setCreditAuthorization(resultSet.getBoolean("credit_authorization"));
+                account.setIdBank(resultSet.getInt("id_bank"));
+                account.setIdClient(resultSet.getString("id_client"));
 
                 return account;
             } else {
@@ -143,7 +143,7 @@ public class AccountRepository implements CrudOperation<Account>{
 
     public void updateCreditAuthorization(UUID id, double newCount){
         try{
-            String query = "UPDATE account SET creditauthorization = true WHERE id = ?";
+            String query = "UPDATE account SET credit_authorization = true WHERE id = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             Account account = getOneById(id);
             if(!account.isCreditAuthorization()){

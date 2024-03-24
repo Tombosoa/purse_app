@@ -27,7 +27,7 @@ public class InterestRepository implements CrudOperation<Interest>{
                 while(resultSet.next()){
                     int id = resultSet.getInt("id");
                     double counts = resultSet.getDouble("counts");
-                    int dayGone = resultSet.getInt("daygone");
+                    int dayGone = resultSet.getInt("day_gone");
 
                     Interest interest = new Interest(id, counts, dayGone);
                     interestList.add(interest);
@@ -48,7 +48,7 @@ public class InterestRepository implements CrudOperation<Interest>{
     public Interest save(Interest toSave) {
         int idInterest = 0;
         try{
-            String query = "INSERT INTO interest (counts, dayGone) values (?,?)";
+            String query = "INSERT INTO interest (counts, day_gone) values (?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setDouble(1, toSave.getCounts());
             preparedStatement.setInt(2, toSave.getDayGone());
@@ -90,7 +90,7 @@ public class InterestRepository implements CrudOperation<Interest>{
                 Interest interest = new Interest();
                 interest.setId(resultSet.getInt("id"));
                 interest.setCounts(resultSet.getDouble("counts"));
-                interest.setDayGone(resultSet.getInt("dayGone"));
+                interest.setDayGone(resultSet.getInt("day_gone"));
 
                 return interest;
             }else {
@@ -116,7 +116,7 @@ public class InterestRepository implements CrudOperation<Interest>{
 
     public void  updateInterestDayGone(int id, int newDayGone){
         try{
-            String query = "UPDATE interest SET dayGone = ? WHERE id = ?";
+            String query = "UPDATE interest SET day_gone = ? WHERE id = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, newDayGone);
             preparedStatement.setInt(2, id);

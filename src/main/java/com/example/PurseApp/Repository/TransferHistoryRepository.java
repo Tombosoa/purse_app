@@ -34,7 +34,7 @@ public class TransferHistoryRepository implements CrudOperation<TransferHistory>
     public TransferHistory save(TransferHistory toSave) {
         int id = 0;
         try{
-            String query = "INSERT INTO transferHistory (idtransactioncredited, idtransactiondebited) values (?,?)";
+            String query = "INSERT INTO transferHistory (id_transaction_credited, id_transaction_debited) values (?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, toSave.getIdTransactionCredited());
             preparedStatement.setInt(2, toSave.getIdTransactionDebited());

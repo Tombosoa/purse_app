@@ -47,7 +47,7 @@ public class ClientRepository implements CrudOperation<Client> {
         List<Client> savedClients = new ArrayList<>();
         try {
             for (Client client : toSave) {
-                String query = "INSERT INTO client (firstname, lastname, birthdate, monthlypay) VALUES (?, ?, ?, ?)";
+                String query = "INSERT INTO client (firstname, lastname, birthdate, monthly_pay) VALUES (?, ?, ?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setString(1, client.getFirstname());
                 preparedStatement.setString(2, client.getLastname());
@@ -67,7 +67,7 @@ public class ClientRepository implements CrudOperation<Client> {
     public Client save(Client toSave) {
         String idClient;
         try {
-            String query = "INSERT INTO client (firstname, lastname, birthdate, monthlypay) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO client (firstname, lastname, birthdate, monthly_pay) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, toSave.getFirstname());
             preparedStatement.setString(2, toSave.getLastname());
@@ -88,7 +88,7 @@ public class ClientRepository implements CrudOperation<Client> {
     @Override
     public Client update(Client toUpdate) {
         try {
-            String updateQuery = "UPDATE client SET firstname=?, lastname = ?, birthdate = ?, monthlypay=?";
+            String updateQuery = "UPDATE client SET firstname=?, lastname = ?, birthdate = ?, monthly_pay=?";
             PreparedStatement updateStatement = conn.prepareStatement(updateQuery);
             updateStatement.setString(1, toUpdate.getFirstname());
             updateStatement.setString(2, toUpdate.getLastname());
@@ -109,7 +109,7 @@ public class ClientRepository implements CrudOperation<Client> {
                 updatedClient.setFirstname(resultSet.getString("firstname"));
                 updatedClient.setLastname(resultSet.getString("lastname"));
                 updatedClient.setBirthdate(resultSet.getDate("birthdate"));
-                updatedClient.setMonthlyPay(resultSet.getDouble("monthlypay"));
+                updatedClient.setMonthlyPay(resultSet.getDouble("monthly_pay"));
 
                 System.out.println("client updated");
                 return updatedClient;
@@ -160,7 +160,7 @@ public class ClientRepository implements CrudOperation<Client> {
                 client.setFirstname(resultSet.getString("firstname"));
                 client.setLastname(resultSet.getString("lastname"));
                 client.setBirthdate(resultSet.getDate("birthdate"));
-                client.setMonthlyPay(resultSet.getDouble("monthlypay"));
+                client.setMonthlyPay(resultSet.getDouble("monthly_pay"));
 
 
                 return client;

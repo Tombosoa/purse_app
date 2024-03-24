@@ -33,13 +33,13 @@ public class TransactionRepository implements CrudOperation<Transaction>{
                     int id = result.getInt("id");
                     String type = result.getString("type");
                     String description = result.getString("description");
-                    LocalDate registrationDate = result.getDate("registrationdate").toLocalDate();
-                    LocalDate effectiveDate = result.getDate("effectivedate").toLocalDate();
+                    LocalDate registrationDate = result.getDate("registration_date").toLocalDate();
+                    LocalDate effectiveDate = result.getDate("effective_date").toLocalDate();
                     double amount = result.getDouble("amount");
                     boolean status = result.getBoolean("status");
                     String reference = result.getString("reference");
-                    int idCategory = result.getInt("idcategory");
-                    String idAccount = String.valueOf(UUID.fromString(result.getString("idaccount")));
+                    int idCategory = result.getInt("id_category");
+                    String idAccount = String.valueOf(UUID.fromString(result.getString("id_account")));
                     String label = result.getString("label");
                     String situation = result.getString("situation");
 
@@ -62,7 +62,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
     public Transaction save(Transaction toSave) {
         int idTransaction = 0;
         try{
-            String query = "INSERT INTO transaction (type, description, effectivedate, amount, status, reference, idcategory, idaccount, label, situation) values (?,?,?,?,?,?,?,CAST(? AS UUID), ?, ?)";
+            String query = "INSERT INTO transaction (type, description, effective_date, amount, status, reference, id_category, id_account, label, situation) values (?,?,?,?,?,?,?,CAST(? AS UUID), ?, ?)";
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_ss");
             Date date = new Date();
             String dateFormatted = sdf.format(date);
@@ -116,13 +116,13 @@ public class TransactionRepository implements CrudOperation<Transaction>{
                 transaction.setId(resultSet.getInt("id"));
                 transaction.setType(resultSet.getString("type"));
                 transaction.setDescription(resultSet.getString("description"));
-                transaction.setRegistrationDate(resultSet.getDate("registrationdate").toLocalDate());
-                transaction.setEffectiveDate(resultSet.getDate("effectivedate").toLocalDate());
+                transaction.setRegistrationDate(resultSet.getDate("registration_date").toLocalDate());
+                transaction.setEffectiveDate(resultSet.getDate("effective_date").toLocalDate());
                 transaction.setAmount(resultSet.getDouble("amount"));
                 transaction.setStatus(resultSet.getBoolean("status"));
                 transaction.setReference(resultSet.getString("reference"));
-                transaction.setIdCategory(resultSet.getInt("idcategory"));
-                transaction.setIdAccount(resultSet.getString("idaccount"));
+                transaction.setIdCategory(resultSet.getInt("id_category"));
+                transaction.setIdAccount(resultSet.getString("id_account"));
                 transaction.setLabel(resultSet.getString("label"));
                 transaction.setSituation(resultSet.getString("situation"));
 
@@ -137,7 +137,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
 
     public Transaction getByAccountId(UUID id){
         try {
-            String query = "SELECT * FROM transaction WHERE idaccount = ?";
+            String query = "SELECT * FROM transaction WHERE id_account = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setObject(1, id);
 
@@ -147,13 +147,13 @@ public class TransactionRepository implements CrudOperation<Transaction>{
                 transaction.setId(resultSet.getInt("id"));
                 transaction.setType(resultSet.getString("type"));
                 transaction.setDescription(resultSet.getString("description"));
-                transaction.setRegistrationDate(resultSet.getDate("registrationdate").toLocalDate());
-                transaction.setEffectiveDate(resultSet.getDate("effectivedate").toLocalDate());
+                transaction.setRegistrationDate(resultSet.getDate("registration_date").toLocalDate());
+                transaction.setEffectiveDate(resultSet.getDate("effective_date").toLocalDate());
                 transaction.setAmount(resultSet.getDouble("amount"));
                 transaction.setStatus(resultSet.getBoolean("status"));
                 transaction.setReference(resultSet.getString("reference"));
-                transaction.setIdCategory(resultSet.getInt("idcategory"));
-                transaction.setIdAccount(resultSet.getString("idaccount"));
+                transaction.setIdCategory(resultSet.getInt("id_category"));
+                transaction.setIdAccount(resultSet.getString("id_account"));
                 transaction.setLabel(resultSet.getString("label"));
                 transaction.setSituation(resultSet.getString("situation"));
 
@@ -168,7 +168,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
 
     public void updateEffectiveDateById(int id){
         try{
-            String query = "UPDATE transaction SET effectivedate= ? WHERE id = ?";
+            String query = "UPDATE transaction SET effective_date= ? WHERE id = ?";
             Transaction transaction = getOneById(id);
             LocalDateTime registrationDate = transaction.getRegistrationDate().atTime(LocalTime.now());
             PreparedStatement preparedStatement = conn.prepareStatement(query);
@@ -214,7 +214,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
 
     public void updateEffectiveDate(int id, LocalDate newEffectiveDate){
         try{
-            String query = "UPDATE transaction SET effectiveDate = ? WHERE id  = ?";
+            String query = "UPDATE transaction SET effective_date = ? WHERE id  = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setObject(1, newEffectiveDate);
             preparedStatement.setInt(2, id);

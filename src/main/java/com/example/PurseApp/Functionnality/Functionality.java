@@ -157,14 +157,14 @@ public class Functionality {
     public List<AccountStatement> getAccountStatementByAccountId(UUID idAccount) {
         List<AccountStatement> accountStatements = new ArrayList<>();
         try (PreparedStatement preparedStatement = conn.prepareStatement(
-                "select effectivedate, reference, label as motif, balance, " +
+                "select effective_date, reference, label as motif, balance, " +
                         "case when description = 'Credited account' then amount else 0 end as creditMga, " +
                         "case when description = 'Debited account' then amount else 0 end as debitMga " +
-                        "from transaction inner join account on account.id = transaction.idaccount where idaccount=?")) {
+                        "from transaction inner join account on account.id = transaction.id_account where id_account=?")) {
             preparedStatement.setObject(1, idAccount);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    LocalDate effectiveDate = resultSet.getDate("effectivedate").toLocalDate();
+                    LocalDate effectiveDate = resultSet.getDate("effective_date").toLocalDate();
                     String reference = resultSet.getString("reference");
                     String motif = resultSet.getString("motif");
                     double creditMGA = resultSet.getDouble("creditMga");

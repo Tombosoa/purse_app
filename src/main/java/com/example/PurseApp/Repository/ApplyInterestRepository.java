@@ -41,7 +41,7 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
     public ApplyInterest save(ApplyInterest toSave) {
         int idApplyInterest = 0;
         try{
-            String query = "INSERT INTO applyinterest (idAccount, idInterest, startDate, firstDue, actualDue) VALUES (CAST(? AS UUID),?,?,?,?)";
+            String query = "INSERT INTO applyinterest (id_account, id_interest, start_date, first_due, actual_due) VALUES (? ,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setObject(1, toSave.getIdAccount());
             preparedStatement.setInt(2, toSave.getIdInterest());
@@ -86,11 +86,11 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
             if(resultSet.next()){
                 ApplyInterest applyInterest = new ApplyInterest();
                 applyInterest.setId(resultSet.getInt("id"));
-                applyInterest.setIdAccount((UUID) resultSet.getObject("idAccount"));
-                applyInterest.setIdInterest(resultSet.getInt("idInterest"));
-                applyInterest.setStartDate(resultSet.getDate("startDate").toLocalDate());
-                applyInterest.setFirstDue(resultSet.getDouble("firstDue"));
-                applyInterest.setActualDue(resultSet.getDouble("actualDue"));
+                applyInterest.setIdAccount((UUID) resultSet.getObject("id_account"));
+                applyInterest.setIdInterest(resultSet.getInt("id_interest"));
+                applyInterest.setStartDate((LocalDate) resultSet.getObject("start_date"));
+                applyInterest.setFirstDue(resultSet.getDouble("first_due"));
+                applyInterest.setActualDue(resultSet.getDouble("actual_due"));
 
                 return applyInterest;
             }else {
@@ -103,7 +103,7 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
 
     public void updateActualDue(int id, double newActualDue){
         try{
-            String query = "UPDATE applyinterest SET actualDue = ? where id = ?";
+            String query = "UPDATE applyinterest SET actual_due = ? where id = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setDouble(1, newActualDue);
             preparedStatement.setInt(2, id);
@@ -113,24 +113,26 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
         }
     }
 
-    public ApplyInterest getByAccountId(UUID id){
+    public ApplyInterest getByAccountId(UUID id) {
         try {
-            String query = "SELECT * FROM applyinterest where idaccount = ?";
+            String query = "SELECT * FROM applyinterest where id_account = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setObject(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 ApplyInterest applyInterest = new ApplyInterest();
                 applyInterest.setId(resultSet.getInt("id"));
-                applyInterest.setIdAccount((UUID) resultSet.getObject("idAccount"));
-                applyInterest.setIdInterest(resultSet.getInt("idInterest"));
-                applyInterest.setStartDate(resultSet.getDate("startDate").toLocalDate());
-                applyInterest.setFirstDue(resultSet.getDouble("firstDue"));
-                applyInterest.setActualDue(resultSet.getDouble("actualDue"));
+                applyInterest.setIdAccount((UUID) resultSet.getObject("id_account"));
+                applyInterest.setIdInterest(resultSet.getInt("id_interest"));
+                // Gestion du cas null pour start_date
+                Date startDate = resultSet.getDate("start_date");
+                applyInterest.setStartDate(startDate != null ? startDate.toLocalDate() : null);
+                applyInterest.setFirstDue(resultSet.getDouble("first_due"));
+                applyInterest.setActualDue(resultSet.getDouble("actual_due"));
 
                 return applyInterest;
-            }else {
+            } else {
                 throw new PropertyNotFoundException("ApplyInterest not found");
             }
         } catch (SQLException e) {
@@ -138,9 +140,10 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
         }
     }
 
+
     public void updateById(int id,LocalDate startDate, double actualDue, double firstDue){
         try {
-            String query = "UPDATE applyinterest SET startdate = ?, firstdue = ?, actualdue = ? WHERE id = ?";
+            String query = "UPDATE applyinterest SET start_date = ?, first_due = ?, actual_due = ? WHERE id = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setObject(1, startDate);
             preparedStatement.setDouble(2, firstDue);
@@ -155,7 +158,7 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
 
     public ApplyInterest getOneByInterestId(int id){
         try {
-            String query = "SELECT * FROM applyinterest where idinterest = ?";
+            String query = "SELECT * FROM applyinterest where id_interest = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, id);
 
@@ -163,11 +166,11 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
             if(resultSet.next()){
                 ApplyInterest applyInterest = new ApplyInterest();
                 applyInterest.setId(resultSet.getInt("id"));
-                applyInterest.setIdAccount((UUID) resultSet.getObject("idAccount"));
-                applyInterest.setIdInterest(resultSet.getInt("idInterest"));
-                applyInterest.setStartDate(resultSet.getDate("startDate").toLocalDate());
-                applyInterest.setFirstDue(resultSet.getDouble("firstDue"));
-                applyInterest.setActualDue(resultSet.getDouble("actualDue"));
+                applyInterest.setIdAccount((UUID) resultSet.getObject("id_account"));
+                applyInterest.setIdInterest(resultSet.getInt("id_interest"));
+                applyInterest.setStartDate(resultSet.getDate("start_date").toLocalDate());
+                applyInterest.setFirstDue(resultSet.getDouble("first_due"));
+                applyInterest.setActualDue(resultSet.getDouble("actual_due"));
 
                 return applyInterest;
             }else {
