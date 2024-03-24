@@ -240,7 +240,7 @@ paths:
                       body:
                         $ref: '#/components/schemas/Account'
 
-  /client/creditAuthorization:
+  /account/creditAuthorization:
     put:
       tags:
         - "Account"
@@ -263,8 +263,13 @@ paths:
           content:
             application/json:
               schema: 
-                type: string
-                example: success
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        items:
+                          type: string
+                        example: success
 
 #-----------------Bank-----------------
   /bank/all:
@@ -489,6 +494,31 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Transaction'
+  /transaction/byAccountId:
+    get: 
+      tags:
+        - "Transaction"
+      summary: get one transaction by account id
+      operationId: gettransactionByAccountId
+      parameters:
+        - in: query
+          name: id 
+          required: true
+          description: get by account id 
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: '#/components/schemas/Transaction'
+  
 
 #--------Category------------------------
   /category/all:
@@ -840,13 +870,16 @@ paths:
       responses:
         '200':
           description: success 
-          content: 
+          content:
             application/json:
               schema: 
-                type: object
-                properties:
-                  id: 
-                    type: number
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        items:
+                          type: number
+                        example: 1
 
   /transfer:
     post:   
@@ -877,7 +910,11 @@ paths:
           content:
             application/json:
               schema: 
-                $ref: "#/components/schemas/TransferHistory"
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: "#/components/schemas/TransferHistory"
           
   /multiTransfer:
     post: 
@@ -910,7 +947,13 @@ paths:
           content:
             application/json:
               schema: 
-                $ref: "#/components/schemas/TransferHistory"
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TransferHistory"
   /scheduledTransfer:
     post:   
       tags:
@@ -946,8 +989,12 @@ paths:
           content:
             application/json:
               schema: 
-                $ref: "#/components/schemas/TransferHistory"
- 
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: "#/components/schemas/TransferHistory"
+          
   /canceledTransaction:
     post:
       tags:
@@ -966,8 +1013,13 @@ paths:
           content:
             application/json:
               schema: 
-                type: string
-                example: "canceled successfuly"
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        items:
+                          type: string
+                        example: "Canceled successfuly"
 
 
 components:
