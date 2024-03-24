@@ -41,7 +41,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Updated\",\n  \"lastname\": \"Name\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
+							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Rakoto\",\n  \"lastname\": \"Nante\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,7 +59,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Updated\",\n  \"lastname\": \"Name\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
+							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"Rakoto\",\n  \"lastname\": \"Nante\",\n  \"birthdate\": \"1985-05-05\",\n  \"monthlyPay\": 6000.00\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -82,11 +82,93 @@
 		},
 		{
 			"name": "Account",
-			"item": []
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/all"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"1\",\n  \"balance\": 1000.00,\n  \"creditAuthorization\": true,\n  \"idClient\": \"client_id\",\n  \"idBank\": 123,\n  \"name\": \"Account Name\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/new"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/creditAuthorization?id=account_id&newCount=new_credit_authorization_count",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"creditAuthorization"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "account_id"
+								},
+								{
+									"key": "newCount",
+									"value": "new_credit_authorization_count"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Bank",
-			"item": []
+			"item": [
+				{
+					"name": "all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/all"
+					},
+					"response": []
+				},
+				{
+					"name": "new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"name\": \"BMOI\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Transaction",
