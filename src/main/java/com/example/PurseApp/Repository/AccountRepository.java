@@ -127,6 +127,33 @@ public class AccountRepository implements CrudOperation<Account>{
         }
     }
 
+
+    public List<Account> getByClientId(UUID id){
+        List<Account> accountList = new ArrayList<>();
+        try (PreparedStatement preparedStatement = conn.prepareStatement("select account.id as id, firstname, lastname, birthdate, monthly_pay, balance, credit_authorization, bank.name, client.id as id_client from client inner join account on client.id = account.id_client inner join bank on bank.id = account.id_bank where id_client = ?")){
+            preparedStatement.setObject(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()){
+                    String ids = resultSet.getString("id");
+                    String firstname = resultSet.getString("firstname");
+                    String lastname = resultSet.getString("lastname");
+                    Date birthdate = resultSet.getDate("birthdate");
+                    double monthlyPay = resultSet.getDouble("monthly_pay");
+                    double balance = resultSet.getDouble("balance");
+                    boolean creditAuthorization = resultSet.getBoolean("credit_authorization");
+                    String name = resultSet.getString("name");
+                    String idClient = resultSet.getString("id_client");
+
+                    Account account = new Account(ids, firstname, lastname, birthdate, monthlyPay, balance, creditAuthorization, name, idClient);
+                    accountList.add(account);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return accountList;
+    }
+
     public void updateBalanceById(UUID id, double newBalance){
         try{
             String query = "UPDATE account SET balance = ? WHERE id = ?";
