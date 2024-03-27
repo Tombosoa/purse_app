@@ -43,7 +43,7 @@ public class TransactionRepository implements CrudOperation<Transaction>{
                     String label = result.getString("label");
                     String situation = result.getString("situation");
 
-                    Transaction transaction = new Transaction(id,type, description, registrationDate, effectiveDate, amount, status, reference, idCategory, idAccount, label, situation);
+                    Transaction transaction = new Transaction(id, type, description, registrationDate, effectiveDate, amount, status, reference, idCategory, idAccount, label, situation);
                     transactionList.add(transaction);
                 }
             }
