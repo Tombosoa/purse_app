@@ -26,7 +26,8 @@
 					"name": "Get all client",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": "{{base_url}}/client/all"
 					},
 					"response": []
 				},
@@ -37,19 +38,19 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": \"1\",\n  \"firstname\": \"John\",\n  \"lastname\": \"Doe\",\n  \"birthdate\": \"1980-01-01\",\n  \"monthlyPay\": 5000.00\n}\n",
+							"raw": "{\n  \"firstname\": \"John\",\n  \"lastname\": \"Doe\",\n  \"birthdate\": \"1980-01-01\",\n  \"monthlyPay\": 5000.00\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{base_url}}/new"
+						"url": "{{base_url}}/client/new"
 					},
 					"response": []
 				},
 				{
-					"name": "Update new Client",
+					"name": "Create new client or Updating existing client",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -62,7 +63,7 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/update"
+						"url": "{{base_url}}/client/update"
 					},
 					"response": []
 				},
@@ -80,7 +81,7 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/delete"
+						"url": "{{base_url}}/client/delete"
 					},
 					"response": []
 				}
@@ -94,7 +95,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/all"
+						"url": "{{base_url}}/account/all"
 					},
 					"response": []
 				},
@@ -112,7 +113,7 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/new"
+						"url": "{{base_url}}/account/new"
 					},
 					"response": []
 				},
@@ -122,11 +123,12 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/creditAuthorization?id=account_id&newCount=new_credit_authorization_count",
+							"raw": "{{base_url}}/account/creditAuthorization?id=account_id&newCount=new_credit_authorization_count",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"account",
 								"creditAuthorization"
 							],
 							"query": [
@@ -153,7 +155,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/all"
+						"url": "{{base_url}}/bank/all"
 					},
 					"response": []
 				},
@@ -170,7 +172,8 @@
 									"language": "json"
 								}
 							}
-						}
+						},
+						"url": "{{base_url}}/bank/new"
 					},
 					"response": []
 				}
@@ -362,11 +365,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/getOne?id=interest_id",
+									"raw": "{{base_url}}/interest/getOne?id=interest_id",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
+										"interest",
 										"getOne"
 									],
 									"query": [
@@ -405,11 +409,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/getOne?id=interest_id",
+							"raw": "{{base_url}}/applyInterest/getOne?id=interest_id",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
+								"applyInterest",
 								"getOne"
 							],
 							"query": [
@@ -436,7 +441,7 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/new"
+						"url": "{{base_url}}/applyInterest/new"
 					},
 					"response": []
 				}

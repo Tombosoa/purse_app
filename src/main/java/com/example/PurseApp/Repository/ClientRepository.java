@@ -31,7 +31,7 @@ public class ClientRepository implements CrudOperation<Client> {
                     String firstname = result.getString("firstname");
                     String lastname = result.getString("lastname");
                     Date birthdate = result.getDate("birthdate");
-                    double monthlyPay = result.getDouble("monthlypay");
+                    double monthlyPay = result.getDouble("monthly_pay");
                     Client client = new Client(id,firstname, lastname, birthdate, monthlyPay);
                     clientList.add(client);
                 }
