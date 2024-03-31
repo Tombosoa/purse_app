@@ -157,11 +157,49 @@ public class Functionality {
     public List<AccountStatement> getAccountStatementByAccountId(UUID idAccount) {
         List<AccountStatement> accountStatements = new ArrayList<>();
         try (PreparedStatement preparedStatement = conn.prepareStatement(
-                "select effective_date, reference, label as motif, balance, " +
-                        "case when description = 'Credited account' then amount else 0 end as creditMga, " +
-                        "case when description = 'Debited account' then amount else 0 end as debitMga " +
-                        "from transaction inner join account on account.id = transaction.id_account where id_account=?")) {
+                "SELECT \n" +
+                        "    t.effective_date, \n" +
+                        "    t.reference, \n" +
+                        "    t.label AS motif, \n" +
+                        "    (SELECT \n" +
+                        "        (account.balance - SUM(CASE WHEN description = 'Credited account' THEN amount ELSE 0 END) + \n" +
+                        "        SUM(CASE WHEN description = 'Debited account' THEN amount ELSE 0 END)) \n" +
+                        "    FROM \n" +
+                        "        transaction \n" +
+                        "    INNER JOIN \n" +
+                        "        account ON account.id = transaction.id_account\n" +
+                        "    WHERE \n" +
+                        "        account.id = ? GROUP BY account.id) AS initial_balance,\n" +
+                        "    CASE \n" +
+                        "        WHEN t.description = 'Credited account' THEN t.amount \n" +
+                        "        ELSE 0 \n" +
+                        "    END AS creditMga, \n" +
+                        "    CASE \n" +
+                        "        WHEN t.description = 'Debited account' THEN t.amount \n" +
+                        "        ELSE 0 \n" +
+                        "    END AS debitMga,\n" +
+                        "    (SELECT \n" +
+                        "        (account.balance - SUM(CASE WHEN description = 'Credited account' THEN amount ELSE 0 END) + \n" +
+                        "        SUM(CASE WHEN description = 'Debited account' THEN amount ELSE 0 END)) \n" +
+                        "    FROM \n" +
+                        "        transaction \n" +
+                        "    INNER JOIN \n" +
+                        "        account ON account.id = transaction.id_account\n" +
+                        "    WHERE \n" +
+                        "        account.id = ? GROUP BY account.id) + \n" +
+                        "    SUM(CASE \n" +
+                        "            WHEN t.description = 'Credited account' THEN t.amount \n" +
+                        "            ELSE -t.amount \n" +
+                        "        END) OVER (ORDER BY t.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS final_balance\n" +
+                        "FROM \n" +
+                        "    transaction t\n" +
+                        "INNER JOIN \n" +
+                        "    account ON account.id = t.id_account \n" +
+                        "WHERE \n" +
+                        "    account.id= ?;\n")) {
             preparedStatement.setObject(1, idAccount);
+            preparedStatement.setObject(2, idAccount);
+            preparedStatement.setObject(3, idAccount);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     LocalDate effectiveDate = resultSet.getDate("effective_date").toLocalDate();
@@ -169,7 +207,7 @@ public class Functionality {
                     String motif = resultSet.getString("motif");
                     double creditMGA = resultSet.getDouble("creditMga");
                     double debitMGA = resultSet.getDouble("debitMga");
-                    double balance = resultSet.getDouble("balance");
+                    double balance = resultSet.getDouble("final_balance");
                     AccountStatement accountStatement = new AccountStatement(effectiveDate, reference, motif, creditMGA, debitMGA, balance);
                     accountStatements.add(accountStatement);
                 }
