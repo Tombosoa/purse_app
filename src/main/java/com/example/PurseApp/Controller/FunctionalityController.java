@@ -42,18 +42,20 @@ public class FunctionalityController {
     public TransferHistory makeTransfer(
             @RequestParam double amount,
             @RequestParam UUID idAccountDebited,
-            @RequestParam UUID idAccountCredited
+            @RequestParam UUID idAccountCredited,
+            @RequestParam String label
     ){
-        return functionality.makeTransfer(amount, idAccountCredited,  idAccountDebited);
+        return functionality.makeTransfer(amount, idAccountCredited,  idAccountDebited, label);
     }
 
     @PostMapping("/multiTransfer")
     public List<TransferHistory> multiTransfer(
             @RequestParam double amount,
             @RequestParam UUID idAccountDebited,
-            @RequestParam List<UUID> idAccountCreditedList
+            @RequestParam List<UUID> idAccountCreditedList,
+            @RequestParam String label
     ){
-        return functionality.multiTransfer(amount, idAccountDebited, idAccountCreditedList);
+        return functionality.multiTransfer(amount, idAccountDebited, idAccountCreditedList, label);
     }
 
     @PostMapping("/scheduledTransfer")
@@ -61,9 +63,10 @@ public class FunctionalityController {
             @RequestParam double amount,
             @RequestParam UUID idAccountDebited,
             @RequestParam UUID idAccountCredited,
-            @RequestParam LocalDate newEffectiveDate
+            @RequestParam LocalDate newEffectiveDate,
+            @RequestParam String label
             ){
-        return functionality.scheduledTransfer(amount, idAccountCredited, idAccountDebited, newEffectiveDate);
+        return functionality.scheduledTransfer(amount, idAccountCredited, idAccountDebited, newEffectiveDate, label);
     }
 
     @PostMapping("/canceledTransaction")
