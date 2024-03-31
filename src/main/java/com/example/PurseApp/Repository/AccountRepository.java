@@ -2,6 +2,7 @@ package com.example.PurseApp.Repository;
 
 import com.example.PurseApp.DataBaseConnection;
 import com.example.PurseApp.Entity.Account;
+import com.example.PurseApp.Entity.AccountInterest;
 import com.example.PurseApp.Entity.ApplyInterest;
 import com.example.PurseApp.Entity.Interest;
 import jakarta.el.PropertyNotFoundException;
@@ -123,6 +124,29 @@ public class AccountRepository implements CrudOperation<Account>{
                 throw new PropertyNotFoundException("Account not found with id: " + id);
             }
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public AccountInterest getAccountInterestById(UUID id){
+        try{
+            String query = "SELECT account.id as id_account, actual_due, counts from account inner join applyinterest on account.id = applyinterest.id_account inner join interest on interest.id = applyinterest.id_interest WHERE account.id = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setObject(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                AccountInterest accountInterest = new AccountInterest();
+                accountInterest.setIdAccount((UUID) resultSet.getObject("id_account"));
+                accountInterest.setActual_due(resultSet.getDouble("actual_due"));
+                accountInterest.setCounts(resultSet.getDouble("counts"));
+
+                return accountInterest;
+            } else {
+                throw new PropertyNotFoundException("No data found");
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
