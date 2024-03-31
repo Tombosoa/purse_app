@@ -1,6 +1,7 @@
 package com.example.PurseApp.Controller;
 
 import com.example.PurseApp.Entity.Account;
+import com.example.PurseApp.Entity.AccountInterest;
 import com.example.PurseApp.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +42,12 @@ public class AccountController {
             @PathVariable UUID idClient
     ){
         return accountRepository.getByClientId(idClient);
+    }
+
+    @GetMapping("/accountInterest")
+    public AccountInterest getAccountInterestById(
+            @RequestParam UUID id
+    ){
+        return accountRepository.getAccountInterestById(id);
     }
 }
