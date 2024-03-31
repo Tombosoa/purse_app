@@ -213,6 +213,38 @@
 						"url": "{{base_url}}/new"
 					},
 					"response": []
+				},
+				{
+					"name": "Get Sum Incomes And Expenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/sum?startDate=2024-03-26&endDate=2024-03-27&accountId=f6bea828-9625-4a24-aecf-0daf0e970c30",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								"sum"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-03-26"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-03-27"
+								},
+								{
+									"key": "accountId",
+									"value": "f6bea828-9625-4a24-aecf-0daf0e970c30"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -345,6 +377,38 @@
 								{
 									"key": "id",
 									"value": "id_transaction"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sum Amounts By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories/sum?startDate=2024-03-26&endDate=2024-03-27&accountId=65cb7619-593e-4811-9725-9464a27cc9ed",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories",
+								"sum"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-03-26"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-03-27"
+								},
+								{
+									"key": "accountId",
+									"value": "65cb7619-593e-4811-9725-9464a27cc9ed"
 								}
 							]
 						}
