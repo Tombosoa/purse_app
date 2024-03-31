@@ -5,8 +5,11 @@ import com.example.PurseApp.Repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/transaction")
@@ -41,4 +44,18 @@ public class TransactionController {
    ){
         return transactionRepository.findAllByClientId(id);
    }
+    @GetMapping("/sum")
+    public List<Map<String, Object>> sumIncomesAndExpenses(@RequestParam("startDate") String startDate,
+                                                           @RequestParam("endDate") String endDate,
+                                                           @RequestParam("accountId") String accountId) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        UUID accountIdUuid = UUID.fromString(accountId);
+        try {
+            return transactionRepository.sumIncomesAndExpenses(start, end, accountIdUuid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
 }
