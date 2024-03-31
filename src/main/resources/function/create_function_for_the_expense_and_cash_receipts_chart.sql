@@ -16,4 +16,4 @@ BEGIN
     GROUP BY operation_type
     ORDER BY operation_type;
 END;
-
+$$ LANGUAGE plpgsql;

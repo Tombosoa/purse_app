@@ -19,4 +19,4 @@ BEGIN
     GROUP BY c.id, c.name
     ORDER BY total_amount DESC;
 END;
-
+$$ LANGUAGE plpgsql;
