@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.*;
 
 @Component
 public class TransactionRepository implements CrudOperation<Transaction>{
@@ -252,6 +253,26 @@ public class TransactionRepository implements CrudOperation<Transaction>{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    public List<Map<String, Object>> sumIncomesAndExpenses(LocalDate startDate, LocalDate endDate, UUID accountId) throws SQLException {
+        List<Map<String, Object>> results = new ArrayList<>();
+        String sql = "SELECT * FROM SumIncomesAndExpenses(?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, java.sql.Date.valueOf(startDate));
+            stmt.setDate(2, java.sql.Date.valueOf(endDate));
+            stmt.setObject(3, accountId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("operation_type", rs.getString("operation_type"));
+                    result.put("total_amount", rs.getDouble("total_amount"));
+                    result.put("category_id", rs.getInt("category_id"));
+                    result.put("category_name", rs.getString("category_name"));
+                    results.add(result);
+                }
+            }
+        }
+        return results;
     }
 
 }
