@@ -17,6 +17,7 @@ import java.util.Collections;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -82,10 +83,10 @@ public class FunctionalityController {
         return functionality.getAccountStatementByAccountId(idAccount);
     }
     @GetMapping("/categories/sum")
-    public List<Category> sumAmountsByCategory(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                               @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+    public List<Map<String, Object>> sumAmountsByCategory(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                          @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate, @RequestParam("accountId") UUID accountId) {
         try {
-            return categoryRepository.sumAmountsByCategory(startDate, endDate);
+            return categoryRepository.sumAmountsByCategory(startDate, endDate, accountId);
         } catch (SQLException e) {
             e.printStackTrace();
             return Collections.emptyList();

@@ -6,10 +6,9 @@ import jakarta.el.PropertyNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-
-import java.util.List;
+import java.util.*;
 
 @Component
 public class CategoryRepository implements CrudOperation<Category>{
@@ -73,23 +72,24 @@ public class CategoryRepository implements CrudOperation<Category>{
             throw new RuntimeException(e);
         }
     }
-    public List<Category> sumAmountsByCategory(LocalDate startDate, LocalDate endDate) throws SQLException {
-        List<Category> categories = new ArrayList<>();
-        String sql = "SELECT * FROM SumAmountsByCategory(?, ?)";
+    public List<Map<String, Object>> sumAmountsByCategory(LocalDate startDate, LocalDate endDate, UUID accountId) throws SQLException {
+        List<Map<String, Object>> results = new ArrayList<>();
+        String sql = "SELECT * FROM SumAmountsByCategory(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDate(1, Date.valueOf(startDate));
             stmt.setDate(2, Date.valueOf(endDate));
+            stmt.setObject(3, accountId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Category category = new Category();
-                    category.setId(rs.getInt("category_id"));
-                    category.setType(rs.getString("type"));
-                    category.setName(rs.getString("category_name"));
-                    category.setDescription(rs.getString("description"));
-                    categories.add(category);
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("category_id", rs.getInt("category_id"));
+                    result.put("category_name", rs.getString("category_name"));
+                    result.put("total_amount", rs.getDouble("total_amount"));
+                    results.add(result);
                 }
             }
         }
-        return categories;
+        return results;
     }
+
 }
