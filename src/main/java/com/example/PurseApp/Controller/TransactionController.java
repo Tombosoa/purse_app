@@ -34,4 +34,11 @@ public class TransactionController {
             ){
         return transactionRepository.getByAccountId(id);
     }
+
+    @GetMapping("/byClientId")
+   public List<Transaction> getByClientId(
+           @RequestParam UUID id
+   ){
+        return transactionRepository.findAllByClientId(id);
+   }
 }
