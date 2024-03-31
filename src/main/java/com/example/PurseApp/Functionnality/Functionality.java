@@ -107,7 +107,7 @@ public class Functionality {
         return idTransaction;
     }
 
-    public TransferHistory makeTransfer(double amount, UUID idAccountCredited, UUID idAccountDebited) {
+    public TransferHistory makeTransfer(double amount, UUID idAccountCredited, UUID idAccountDebited, String label) {
         try {
             Account accountDebited = accountRepository.getOneById(idAccountDebited);
             Account accountCredited = accountRepository.getOneById(idAccountCredited);
@@ -115,8 +115,8 @@ public class Functionality {
             int idTransactionCredited;
 
             if (accountCredited.getIdBank() != accountDebited.getIdBank()) {
-                idTransactionCredited = makeSupply(new SupplyBody("Incoming", amount, idAccountCredited, "Other"));
-                idTransactionDebited = makeSupply(new SupplyBody("Outgoing", amount, idAccountDebited, "Other"));
+                idTransactionCredited = makeSupply(new SupplyBody("Incoming", amount, idAccountCredited, "Other", "Receive transfer: " + label));
+                idTransactionDebited = makeSupply(new SupplyBody("Outgoing", amount, idAccountDebited, "Other", "Make transfer: " +label));
 
                 transactionRepository.updateEffectiveDateById(idTransactionCredited);
 
@@ -125,8 +125,8 @@ public class Functionality {
                 transferHistory.setIdTransactionCredited(idTransactionCredited);
                 return transferHistoryRepository.save(transferHistory);
             } else {
-                idTransactionCredited = makeSupply(new SupplyBody("Incoming", amount, idAccountCredited, "Other"));
-                idTransactionDebited = makeSupply(new SupplyBody("Outgoing", amount, idAccountDebited, "Other"));
+                idTransactionCredited = makeSupply(new SupplyBody("Incoming", amount, idAccountCredited, "Other", "Receive transfer: " +label));
+                idTransactionDebited = makeSupply(new SupplyBody("Outgoing", amount, idAccountDebited, "Other", "Make transfer: " +label));
                 TransferHistory transferHistory = new TransferHistory();
                 transferHistory.setIdTransactionDebited(idTransactionDebited);
                 transferHistory.setIdTransactionCredited(idTransactionCredited);
@@ -137,17 +137,17 @@ public class Functionality {
         }
     }
 
-    public List<TransferHistory> multiTransfer(double amount, UUID idAccountDebited, List<UUID> idAccountCreditedList){
+    public List<TransferHistory> multiTransfer(double amount, UUID idAccountDebited, List<UUID> idAccountCreditedList, String label){
         List<TransferHistory> result = new ArrayList<>();
         for (UUID idAccountCredited:idAccountCreditedList){
-            TransferHistory res = makeTransfer(amount, idAccountCredited,idAccountDebited);
+            TransferHistory res = makeTransfer(amount, idAccountCredited,idAccountDebited, label);
             result.add(res);
         }
         return result;
     }
 
-    public TransferHistory scheduledTransfer(double amount, UUID idAccountCredited, UUID idAccountDebited, LocalDate newEffectiveDate){
-        TransferHistory result = makeTransfer(amount, idAccountCredited, idAccountDebited);
+    public TransferHistory scheduledTransfer(double amount, UUID idAccountCredited, UUID idAccountDebited, LocalDate newEffectiveDate, String label){
+        TransferHistory result = makeTransfer(amount, idAccountCredited, idAccountDebited, label);
         int idTransactionCredited = result.getIdTransactionCredited();
         int idTransactionDebited = result.getIdTransactionDebited();
         transactionRepository.updateEffectiveDate(idTransactionCredited, newEffectiveDate);
