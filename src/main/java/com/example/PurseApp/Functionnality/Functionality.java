@@ -86,7 +86,7 @@ public class Functionality {
         } else if (supplyBody.getAction().equals("Outgoing") && !creditAuthorization) {
             if (actualBalance == 0) {
                 return 0;
-            } else if (actualBalance - supplyBody.getSupplyAmount() <= 0 ) {
+            } else if (actualBalance - supplyBody.getSupplyAmount() < 0 ) {
                 return 0;
             }else if (actualBalance - supplyBody.getSupplyAmount() >= 0) {
                 transaction.setType("Outgoing");
@@ -196,7 +196,7 @@ public class Functionality {
                         "INNER JOIN \n" +
                         "    account ON account.id = t.id_account \n" +
                         "WHERE \n" +
-                        "    account.id= ?;\n")) {
+                        "    account.id= ? ORDER BY effective_date asc ;\n")) {
             preparedStatement.setObject(1, idAccount);
             preparedStatement.setObject(2, idAccount);
             preparedStatement.setObject(3, idAccount);
