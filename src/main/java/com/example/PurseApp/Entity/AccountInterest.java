@@ -5,7 +5,8 @@ import java.util.UUID;
 
 public class AccountInterest {
     private UUID idAccount;
-    private double actual_due;
+    private double actualDue;
+    private double firstDue;
     private double counts;
 
     public UUID getIdAccount() {
@@ -16,12 +17,20 @@ public class AccountInterest {
         this.idAccount = idAccount;
     }
 
-    public double getActual_due() {
-        return actual_due;
+    public double getActualDue() {
+        return actualDue;
     }
 
-    public void setActual_due(double actual_due) {
-        this.actual_due = actual_due;
+    public void setActualDue(double actualDue) {
+        this.actualDue = actualDue;
+    }
+
+    public double getFirstDue() {
+        return firstDue;
+    }
+
+    public void setFirstDue(double firstDue) {
+        this.firstDue = firstDue;
     }
 
     public double getCounts() {
@@ -32,9 +41,10 @@ public class AccountInterest {
         this.counts = counts;
     }
 
-    public AccountInterest(UUID idAccount, double actual_due, double counts) {
+    public AccountInterest(UUID idAccount, double actualDue, double firstDue, double counts) {
         this.idAccount = idAccount;
-        this.actual_due = actual_due;
+        this.actualDue = actualDue;
+        this.firstDue = firstDue;
         this.counts = counts;
     }
 
@@ -45,19 +55,20 @@ public class AccountInterest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AccountInterest that)) return false;
-        return Double.compare(getActual_due(), that.getActual_due()) == 0 && Double.compare(getCounts(), that.getCounts()) == 0 && Objects.equals(getIdAccount(), that.getIdAccount());
+        return Double.compare(getActualDue(), that.getActualDue()) == 0 && Double.compare(getFirstDue(), that.getFirstDue()) == 0 && Double.compare(getCounts(), that.getCounts()) == 0 && Objects.equals(getIdAccount(), that.getIdAccount());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdAccount(), getActual_due(), getCounts());
+        return Objects.hash(getIdAccount(), getActualDue(), getFirstDue(), getCounts());
     }
 
     @Override
     public String toString() {
         return "AccountInterest{" +
                 "idAccount=" + idAccount +
-                ", actual_due=" + actual_due +
+                ", actualDue=" + actualDue +
+                ", firstDue=" + firstDue +
                 ", counts=" + counts +
                 '}';
     }
