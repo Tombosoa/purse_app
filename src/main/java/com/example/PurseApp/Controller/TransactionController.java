@@ -58,4 +58,23 @@ public class TransactionController {
             return Collections.emptyList();
         }
     }
+
+    @PostMapping("/categorize")
+    public String categorizeTransaction(
+            @RequestParam String type,
+            @RequestParam String name,
+            @RequestParam int idTransaction
+    ){
+        return transactionRepository.categorizeTransaction(type, name, idTransaction);
+    }
+
+
+    @PostMapping("/categorizeSeveral")
+    public String categorizeTransactions(
+            @RequestParam String type,
+            @RequestParam String name,
+            @RequestParam List<Integer> idTransactions
+    ){
+        return transactionRepository.categorizeTransactions(type, name, idTransactions);
+    }
 }
