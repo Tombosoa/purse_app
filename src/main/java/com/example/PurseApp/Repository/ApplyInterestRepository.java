@@ -41,13 +41,12 @@ public class ApplyInterestRepository implements CrudOperation<ApplyInterest>{
     public ApplyInterest save(ApplyInterest toSave) {
         int idApplyInterest = 0;
         try{
-            String query = "INSERT INTO applyinterest (id_account, id_interest, start_date, first_due, actual_due) VALUES (? ,?,?,?,?)";
+            String query = "INSERT INTO applyinterest (id_account, id_interest, first_due, actual_due) VALUES (? ,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setObject(1, toSave.getIdAccount());
             preparedStatement.setInt(2, toSave.getIdInterest());
-            preparedStatement.setObject(3, toSave.getStartDate());
-            preparedStatement.setDouble(4, toSave.getFirstDue());
-            preparedStatement.setDouble(5, toSave.getActualDue());
+            preparedStatement.setDouble(3, toSave.getFirstDue());
+            preparedStatement.setDouble(4, toSave.getActualDue());
 
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
