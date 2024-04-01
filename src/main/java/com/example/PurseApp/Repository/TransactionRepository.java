@@ -1,8 +1,10 @@
 package com.example.PurseApp.Repository;
 
 import com.example.PurseApp.DataBaseConnection;
+import com.example.PurseApp.Entity.Category;
 import com.example.PurseApp.Entity.Transaction;
 import jakarta.el.PropertyNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -24,6 +26,13 @@ public class TransactionRepository implements CrudOperation<Transaction>{
     DataBaseConnection dbConnection = new DataBaseConnection(userName, password, databaseName);
     Connection conn = dbConnection.getConnection();
     public Statement statement;
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public TransactionRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
     @Override
     public List<Transaction> findAll() {
         List<Transaction> transactionList = new ArrayList<>();
@@ -273,6 +282,60 @@ public class TransactionRepository implements CrudOperation<Transaction>{
             }
         }
         return results;
+    }
+
+    public String categorizeTransaction(String type, String name, int idTransaction){
+        Category category = categoryRepository.getByTypeAndName(type, name);
+        try{
+            String query = "UPDATE transaction SET id_category = ? WHERE id = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, category.getId());
+            preparedStatement.setInt(2, idTransaction);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return "Categorization successfully done";
+            } else {
+                return "No rows were updated";
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String categorizeTransactions(String type, String name, List<Integer> idTransactions) {
+        Category category = categoryRepository.getByTypeAndName(type, name);
+        try {
+            conn.setAutoCommit(false);
+
+            String query = "UPDATE transaction SET id_category = ? WHERE id = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+
+            for (int idTransaction : idTransactions) {
+                preparedStatement.setInt(1, category.getId());
+                preparedStatement.setInt(2, idTransaction);
+                preparedStatement.addBatch();
+            }
+
+            int[] rowsAffected = preparedStatement.executeBatch();
+            conn.commit();
+
+            return "Categorization successfully done for " + rowsAffected.length + " transactions";
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
