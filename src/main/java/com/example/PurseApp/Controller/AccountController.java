@@ -30,11 +30,11 @@ public class AccountController {
     }
 
     @PutMapping("/creditAuthorization")
-    public void updateCreditAuthorization(
+    public String updateCreditAuthorization(
             @RequestParam UUID id,
             @RequestParam double newCount
     ){
-        accountRepository.updateCreditAuthorization(id, newCount);
+        return accountRepository.updateCreditAuthorization(id, newCount);
     }
 
     @GetMapping("/{idClient}")
