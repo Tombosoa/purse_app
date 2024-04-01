@@ -130,7 +130,7 @@ public class AccountRepository implements CrudOperation<Account>{
 
     public AccountInterest getAccountInterestById(UUID id){
         try{
-            String query = "SELECT account.id as id_account, actual_due, counts from account inner join applyinterest on account.id = applyinterest.id_account inner join interest on interest.id = applyinterest.id_interest WHERE account.id = ?";
+            String query = "SELECT account.id as id_account, actual_due, first_due ,counts from account inner join applyinterest on account.id = applyinterest.id_account inner join interest on interest.id = applyinterest.id_interest WHERE account.id = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setObject(1, id);
 
@@ -139,12 +139,13 @@ public class AccountRepository implements CrudOperation<Account>{
             if (resultSet.next()){
                 AccountInterest accountInterest = new AccountInterest();
                 accountInterest.setIdAccount((UUID) resultSet.getObject("id_account"));
-                accountInterest.setActual_due(resultSet.getDouble("actual_due"));
+                accountInterest.setActualDue(resultSet.getDouble("actual_due"));
+                accountInterest.setFirstDue(resultSet.getDouble("first_due"));
                 accountInterest.setCounts(resultSet.getDouble("counts"));
 
                 return accountInterest;
             } else {
-                throw new PropertyNotFoundException("No data found");
+                return new AccountInterest(id, 0,0,0);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -192,12 +193,12 @@ public class AccountRepository implements CrudOperation<Account>{
         }
     }
 
-    public void updateCreditAuthorization(UUID id, double newCount){
+    public String updateCreditAuthorization(UUID id, double newCount){
         try{
             String query = "UPDATE account SET credit_authorization = true WHERE id = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             Account account = getOneById(id);
-            if(!account.isCreditAuthorization()){
+            if(!account.isCreditAuthorization() && account.getBalance() == 0){
                 preparedStatement.setObject(1, id);
 
                 preparedStatement.executeUpdate();
@@ -215,9 +216,13 @@ public class AccountRepository implements CrudOperation<Account>{
                 applyInterestRepository.save(applyInterest);
 
                 interestRepository.updateInterestCount(idInterest, newCount);
+                return "Account authorized to make loan";
+            }else if(!account.isCreditAuthorization() && account.getBalance() > 0){
+                return "You have enough balance on your account";
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return "Unknown error";
     }
 }
