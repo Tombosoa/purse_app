@@ -273,10 +273,10 @@ public class TransactionRepository implements CrudOperation<Transaction>{
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Map<String, Object> result = new HashMap<>();
-                    result.put("operation_type", rs.getString("operation_type"));
-                    result.put("total_amount", rs.getDouble("total_amount"));
-                    result.put("category_id", rs.getInt("category_id"));
-                    result.put("category_name", rs.getString("category_name"));
+                    result.put("operationType", rs.getString("operation_type"));
+                    result.put("totalAmount", rs.getDouble("total_amount"));
+                    result.put("categoryId", rs.getInt("category_id"));
+                    result.put("categoryName", rs.getString("category_name"));
                     results.add(result);
                 }
             }

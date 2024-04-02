@@ -82,9 +82,9 @@ public class CategoryRepository implements CrudOperation<Category>{
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Map<String, Object> result = new HashMap<>();
-                    result.put("category_id", rs.getInt("category_id"));
-                    result.put("category_name", rs.getString("category_name"));
-                    result.put("total_amount", rs.getDouble("total_amount"));
+                    result.put("categoryId", rs.getInt("category_id"));
+                    result.put("categoryName", rs.getString("category_name"));
+                    result.put("totalAmount", rs.getDouble("total_amount"));
                     results.add(result);
                 }
             }
