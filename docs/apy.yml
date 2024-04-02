@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Purse application
+  title: Numeric bank 
   version: 1.0.1
-  description: This application is the first numeric bank at our country
+  description: This application is a simulation of a number bank
 servers:
   - url: http://localhost:8080
 tags:
