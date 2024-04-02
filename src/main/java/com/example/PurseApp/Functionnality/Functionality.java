@@ -157,13 +157,14 @@ public class Functionality {
     public List<AccountStatement> getAccountStatementByAccountId(UUID idAccount) {
         List<AccountStatement> accountStatements = new ArrayList<>();
         try (PreparedStatement preparedStatement = conn.prepareStatement(
-                "SELECT \n" +
+                " SELECT \n" +
                         "    t.effective_date, \n" +
                         "    t.reference, \n" +
                         "    t.label AS motif, \n" +
                         "    (SELECT \n" +
                         "        (account.balance - SUM(CASE WHEN description = 'Credited account' THEN amount ELSE 0 END) + \n" +
-                        "        SUM(CASE WHEN description = 'Debited account' THEN amount ELSE 0 END)) \n" +
+                        "        SUM(CASE WHEN description = 'Debited account' THEN amount ELSE 0 END) +\n" +
+                        "        SUM(CASE WHEN description = 'make loan' THEN amount ELSE 0 END)) \n" +
                         "    FROM \n" +
                         "        transaction \n" +
                         "    INNER JOIN \n" +
@@ -176,11 +177,13 @@ public class Functionality {
                         "    END AS creditMga, \n" +
                         "    CASE \n" +
                         "        WHEN t.description = 'Debited account' THEN t.amount \n" +
+                        "        WHEN t.description = 'make loan' THEN t.amount \n" +
                         "        ELSE 0 \n" +
                         "    END AS debitMga,\n" +
                         "    (SELECT \n" +
                         "        (account.balance - SUM(CASE WHEN description = 'Credited account' THEN amount ELSE 0 END) + \n" +
-                        "        SUM(CASE WHEN description = 'Debited account' THEN amount ELSE 0 END)) \n" +
+                        "        SUM(CASE WHEN description = 'Debited account' THEN amount ELSE 0 END) +\n" +
+                        "        SUM(CASE WHEN description = 'make loan' THEN amount ELSE 0 END)) \n" +
                         "    FROM \n" +
                         "        transaction \n" +
                         "    INNER JOIN \n" +
@@ -189,6 +192,7 @@ public class Functionality {
                         "        account.id = ? GROUP BY account.id) + \n" +
                         "    SUM(CASE \n" +
                         "            WHEN t.description = 'Credited account' THEN t.amount \n" +
+                        "            WHEN t.description = 'make loan' THEN t.amount \n" +
                         "            ELSE -t.amount \n" +
                         "        END) OVER (ORDER BY t.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS final_balance\n" +
                         "FROM \n" +
@@ -196,7 +200,7 @@ public class Functionality {
                         "INNER JOIN \n" +
                         "    account ON account.id = t.id_account \n" +
                         "WHERE \n" +
-                        "    account.id= ? ORDER BY effective_date asc ;\n")) {
+                        "    account.id=? order by effective_date asc;")) {
             preparedStatement.setObject(1, idAccount);
             preparedStatement.setObject(2, idAccount);
             preparedStatement.setObject(3, idAccount);
