@@ -267,22 +267,23 @@ public class TransactionRepository implements CrudOperation<Transaction>{
         List<Map<String, Object>> results = new ArrayList<>();
         String sql = "SELECT * FROM SumIncomesAndExpenses(?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setDate(1, java.sql.Date.valueOf(startDate));
-            stmt.setDate(2, java.sql.Date.valueOf(endDate));
+            stmt.setObject(1, startDate);
+            stmt.setObject(2, endDate);
             stmt.setObject(3, accountId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Map<String, Object> result = new HashMap<>();
-                    result.put("operationType", rs.getString("operation_type"));
-                    result.put("totalAmount", rs.getDouble("total_amount"));
-                    result.put("categoryId", rs.getInt("category_id"));
-                    result.put("categoryName", rs.getString("category_name"));
+                    result.put("month", rs.getInt("month"));
+                    result.put("year", rs.getInt("year"));
+                    result.put("Income", rs.getDouble("Income"));
+                    result.put("Expense", rs.getDouble("Expense"));
                     results.add(result);
                 }
             }
         }
         return results;
     }
+
 
     public String categorizeTransaction(String type, String name, int idTransaction){
         Category category = categoryRepository.getByTypeAndName(type, name);
