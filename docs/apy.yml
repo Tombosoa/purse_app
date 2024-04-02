@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Purse application
-  version: 1.0.0
+  version: 1.0.1
   description: This application is the first numeric bank at our country
 servers:
   - url: http://localhost:8080
@@ -10,9 +10,7 @@ tags:
   - name: Account
   - name: Bank
   - name: Transaction
-  - name: Category
   - name: Interest
-  - name: TransferHistory
   - name: Functionnality
   - name: ApplyInterest
 paths:
@@ -34,6 +32,30 @@ paths:
                       body:
                         items:
                           $ref: '#/components/schemas/Client'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
   /client/{id}:
     get:
@@ -59,18 +81,41 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Client'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+  /client/delete:
     delete:
       tags:
         - Client
-      summary: delete one client by id
-      operationId: deleteClientById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: delete by id 
-          schema: 
-            type: string
+      summary: delete one client
+      operationId: deleteClient
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Client"
       responses:
         '200':
           description: Succès
@@ -82,8 +127,32 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Client'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
-  /client: 
+  /client/new: 
     post:
       tags:
         - Client
@@ -105,6 +174,31 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Client'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+  /client/update:
     put:  
       tags:
         - Client
@@ -126,7 +220,30 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Client'
-
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
 
 #-------------------Account------------------
@@ -148,18 +265,42 @@ paths:
                       body:
                         items:
                           $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
-  /account/{id}:
+  /account/{idClient}:
     get:
       tags:
         - Account
-      summary: get one account by id
-      operationId: getAccountById
+      summary: get accounts by client's id
+      operationId: getAccountByClientId
       parameters:
         - in: path
-          name: id 
+          name: idClient 
           required: true
-          description: get by id 
+          description: get by client's id 
           schema: 
             type: string
       responses:
@@ -169,20 +310,46 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
+                  - $ref: '#/components/schemas/ListBody'
                   - properties:
                       body:
-                        $ref: '#/components/schemas/Account'
-    delete:
+                        items:
+                          $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+  /account/accountInterest:
+    get:
       tags:
         - Account
-      summary: delete one account by id
-      operationId: deleteAccountById
+      summary: get interest by account's id
+      operationId: getAccountInterestById
       parameters:
-        - in: path
-          name: id 
+        - in: query
+          name: id
           required: true
-          description: delete by id 
+          description: get account's interest 
           schema: 
             type: string
       responses:
@@ -195,9 +362,33 @@ paths:
                   - $ref: '#/components/schemas/ResponseBody'
                   - properties:
                       body:
-                        $ref: '#/components/schemas/Account'
+                        $ref: '#/components/schemas/AccountInterest'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
-  /account: 
+  /account/new: 
     post:
       tags:
         - Account
@@ -219,27 +410,30 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Account'
-    put:  
-      tags:
-        - Account
-      summary: crupdate account
-      operationId: crupdateAccount
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: "#/components/schemas/Account"
-      responses:
-        '200':
-          description: Succès
+        '400':
+          description: Bad request 
           content:
             application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Account'
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
   /account/creditAuthorization:
     put:
@@ -271,6 +465,30 @@ paths:
                         items:
                           type: string
                         example: success
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
 #-----------------Bank-----------------
   /bank/all:
@@ -291,56 +509,31 @@ paths:
                       body:
                         items:
                           $ref: '#/components/schemas/Bank'
-
-  /bank/{id}:
-    get:
-      tags:
-        - Bank
-      summary: get one bank by id
-      operationId: getbankById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: get by id 
-          schema: 
-            type: string
-      responses:
-        '200':
-          description: Succès
+        '400':
+          description: Bad request 
           content:
             application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Bank'
-    delete:
-      tags:
-        - Bank
-      summary: delete one bank by id
-      operationId: deletebankById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: delete by id 
-          schema: 
-            type: string
-      responses:
-        '200':
-          description: Succès
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
           content:
             application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Bank'
-
-  /bank: 
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+  /bank/new: 
     post:
       tags:
         - Bank
@@ -362,27 +555,30 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Bank'
-    put:  
-      tags:
-        - Bank
-      summary: crupdate bank
-      operationId: crupdatebank
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: "#/components/schemas/Bank"
-      responses:
-        '200':
-          description: Succès
+        '400':
+          description: Bad request 
           content:
             application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Bank'
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
 #-----------Transaction----------------------
   /transaction/all:
@@ -403,18 +599,42 @@ paths:
                       body:
                         items:
                           $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
-  /transaction/{id}:
+  /transaction/{byAccountId}:
     get:
       tags:
         - Transaction
-      summary: get one transaction by id
-      operationId: gettransactionById
+      summary: get one transaction by account's id
+      operationId: gettransactionByAccountId
       parameters:
         - in: path
-          name: id 
+          name: byAccountId
           required: true
-          description: get by id 
+          description: get by account's id 
           schema: 
             type: string
       responses:
@@ -428,16 +648,42 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Transaction'
-    delete:
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+
+  /transaction/{byClientId}:
+    get:
       tags:
         - Transaction
-      summary: delete one transaction by id
-      operationId: deletetransactionById
+      summary: get one transaction by client's id
+      operationId: gettransactionByClientId
       parameters:
         - in: path
-          name: id 
+          name: byClientId
           required: true
-          description: delete by id 
+          description: get by account's id 
           schema: 
             type: string
       responses:
@@ -447,12 +693,159 @@ paths:
             application/json:
               schema:
                 allOf:
+                  - $ref: '#/components/schemas/ListBody'
+                  - properties:
+                      body:
+                        items:
+                          $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+  /transaction/categorize:
+    post:
+      tags:
+        - Transaction
+      summary: categorize one transaction
+      operationId: categorizeOneTransaction
+      parameters:
+        - in: query
+          name: type 
+          required: true
+          schema: 
+            type: string
+        - in: query
+          name: name  
+          required: true
+          schema: 
+            type: string
+        - in: query
+          name: idTransaction 
+          required: true
+          schema: 
+            type: integer
+      responses:
+        '200':
+          description: 'success'
+          content:
+            application/json:
+              schema: 
+                allOf:
                   - $ref: '#/components/schemas/ResponseBody'
                   - properties:
                       body:
-                        $ref: '#/components/schemas/Transaction'
+                        items:
+                          type: string
+                        example: "Transaction coategorized successfuly"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
-  /transaction: 
+  /transaction/categorizeSeveral:
+    post:
+      tags:
+        - Transaction
+      summary: categorize several transaction
+      operationId: categorizeSeveralTransaction
+      parameters:
+        - in: query
+          name: type 
+          required: true
+          schema: 
+            type: string
+        - in: query
+          name: name  
+          required: true
+          schema: 
+            type: string
+        - in: query
+          name: idTransactions 
+          required: true
+          schema: 
+            type: array
+            properties:
+              idTransaction:
+                type: integer
+      responses:
+        '200':
+          description: 'success'
+          content:
+            application/json:
+              schema: 
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        items:
+                          type: string
+                        example: "Transactions coategorized successfuly"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+
+  /transaction/new: 
     post:
       tags:
         - Transaction
@@ -474,27 +867,31 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Transaction'
-    put:  
-      tags:
-        - Transaction
-      summary: crupdate transaction
-      operationId: crupdatetransaction
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: '#/components/schemas/Transaction'
-      responses:
-        '200':
-          description: Succès
+        '400':
+          description: Bad request 
           content:
             application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Transaction'
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+
   /transaction/byAccountId:
     get: 
       tags:
@@ -519,148 +916,101 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+
+  /transaction/sum:
+    get:
+      tags:
+        - Transaction
+      summary: get sum of expense and income on defined date  
+      operationId: ExpenseIncomeSum
+      parameters:
+        - name: accountId  
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: startDate 
+          in: query
+          required: true
+          schema: 
+            type: string
+            format: date 
+        - name: endDate 
+          in: query
+          required: true
+          schema: 
+            type: string
+            format: date 
+      responses:
+        '200': 
+          description: success
+          content:
+            application/json:
+              schema: 
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: "#/components/schemas/SumIncomeExpense"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
   
 
-#--------Category------------------------
-  /category/all:
-    get:
-      tags:
-        - Category
-      summary: get all category
-      operationId: getcategorys
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ListBody'
-                  - properties:
-                      body:
-                        items:
-                          $ref: '#/components/schemas/Category'
-
-  /category/{id}:
-    get:
-      tags:
-        - Category
-      summary: get one category by id
-      operationId: getcategoryById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: get by id 
-          schema: 
-            type: string
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Category'
-    delete:
-      tags:
-        - Category
-      summary: delete one category by id
-      operationId: deletecategoryById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: delete by id 
-          schema: 
-            type: string
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Category'
-
-  /category: 
-    post:
-      tags:
-        - Category
-      summary: create new category
-      operationId: createcategory
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: "#/components/schemas/Category"
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Category'
-    put:  
-      tags:
-        - Category
-      summary: crupdate category
-      operationId: crupdatecategory
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: "#/components/schemas/Category"
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Category'
-
 #---------------Interest----------------
-  /interest/all:
-    get:
-      tags:
-        - Interest
-      summary: get all interest
-      operationId: getinterests
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ListBody'
-                  - properties:
-                      body:
-                        items:
-                          $ref: '#/components/schemas/Interest'
-
-  /interest/{id}:
+  /interest/getOne:
     get:
       tags:
         - Interest
       summary: get one interest by id
       operationId: getinterestById
       parameters:
-        - in: path
+        - in: query
           name: id 
           required: true
           description: get by id 
@@ -677,31 +1027,32 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Interest'
-    delete:
-      tags:
-        - Interest
-      summary: delete one interest by id
-      operationId: deleteinterestById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: delete by id 
-          schema: 
-            type: string
-      responses:
-        '200':
-          description: Succès
+        '400':
+          description: Bad request 
           content:
             application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Interest'
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
-  /interest: 
+  /interest/new: 
     post:
       tags:
         - Interest
@@ -723,139 +1074,32 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/Interest'
-    put:  
-      tags:
-        - Interest
-      summary: crupdate interest
-      operationId: crupdateinterest
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: "#/components/schemas/Interest"
-      responses:
-        '200':
-          description: Succès
+        '400':
+          description: Bad request 
           content:
             application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/Interest'
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
-#-------------TransferHistory---------
-  /transferHistory/all:
-    get:
-      tags:
-        - TransferHistory
-      summary: get all transferHistory
-      operationId: gettransferHistorys
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ListBody'
-                  - properties:
-                      body:
-                        items:
-                          $ref: '#/components/schemas/TransferHistory'
-
-  /transferHistory/{id}:
-    get:
-      tags:
-        - TransferHistory
-      summary: get one transferHistory by id
-      operationId: gettransferHistoryById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: get by id 
-          schema: 
-            type: string
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/TransferHistory'
-    delete:
-      tags:
-        - TransferHistory
-      summary: delete one transferHistory by id
-      operationId: deletetransferHistoryById
-      parameters:
-        - in: path
-          name: id 
-          required: true
-          description: delete by id 
-          schema: 
-            type: string
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/TransferHistory'
-
-  /transferHistory: 
-    post:
-      tags:
-        - TransferHistory
-      summary: create new transferHistory
-      operationId: createtransferHistory
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: "#/components/schemas/TransferHistory"
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/TransferHistory'
-    put:  
-      tags:
-        - TransferHistory
-      summary: crupdate transferHistory
-      operationId: crupdatetransferHistory
-      requestBody:
-        content:
-          application/json:
-            schema: 
-              $ref: "#/components/schemas/TransferHistory"
-      responses:
-        '200':
-          description: Succès
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ResponseBody'
-                  - properties:
-                      body:
-                        $ref: '#/components/schemas/TransferHistory'
+#----------funtionnality-----------
 
   /makeSupply:
     post:
@@ -881,6 +1125,30 @@ paths:
                         items:
                           type: number
                         example: 1
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
 
   /transfer:
     post:   
@@ -916,6 +1184,30 @@ paths:
                   - properties:
                       body:
                         $ref: "#/components/schemas/TransferHistory"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
           
   /multiTransfer:
     post: 
@@ -955,6 +1247,30 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/TransferHistory"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
   /scheduledTransfer:
     post:   
       tags:
@@ -995,6 +1311,30 @@ paths:
                   - properties:
                       body:
                         $ref: "#/components/schemas/TransferHistory"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
           
   /canceledTransaction:
     post:
@@ -1021,6 +1361,137 @@ paths:
                         items:
                           type: string
                         example: "Canceled successfuly"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+  /getStatement:
+    get:
+      tags:
+        - "Functionnality"
+      summary: get account statement 
+      operationId: accountStatement 
+      parameters:
+        - name: idAccount 
+          in: query
+          required: true
+          schema: 
+            type: string
+      responses:
+        '200': 
+          description: success
+          content:
+            application/json:
+              schema: 
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: "#/components/schemas/AccountStatement"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+  /categories/sum:
+    get:
+      tags:
+        - "Functionnality"
+      summary: get sum off categories due on defined date  
+      operationId: categorieSum
+      parameters:
+        - name: accountId  
+          in: query
+          required: true
+          schema: 
+            type: string
+        - name: startDate 
+          in: query
+          required: true
+          schema: 
+            type: string
+            format: date 
+        - name: endDate 
+          in: query
+          required: true
+          schema: 
+            type: string
+            format: date 
+      responses:
+        '200': 
+          description: success
+          content:
+            application/json:
+              schema: 
+                allOf:
+                  - $ref: '#/components/schemas/ResponseBody'
+                  - properties:
+                      body:
+                        $ref: "#/components/schemas/CategorieSum"
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
+
   /applyInterest/new:
     post: 
       tags:
@@ -1043,6 +1514,30 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/ApplyInterest'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
  
   /applyInterest/getOne:
     get: 
@@ -1067,6 +1562,30 @@ paths:
                   - properties:
                       body:
                         $ref: '#/components/schemas/ApplyInterest'
+        '400':
+          description: Bad request 
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/BadRequest"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Forbidden"
+        '404':
+          description: NotFound
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NotFound"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ServerError"
  
 
 components:
@@ -1098,6 +1617,61 @@ components:
           type: string
         idBank:
           type: integer
+    AccountStatement:
+      type: object
+      properties:
+        effectiveDate:
+          type: string
+          format: date
+        reference:
+          type: string
+        motif:
+          type: string
+        creditMGA: 
+          type: number
+          format: double
+        debitMGA:
+          type: number
+          format: double
+        balance:
+          type: number
+          format: double
+    CategorieSum:
+      type: object
+      properties:
+        categoryName:
+          type: string
+        categoryId:
+          type: integer
+        totalAmount:
+          type: number
+          format: double
+    SumIncomeExpense:
+      type: object
+      properties:
+        categoryName:
+          type: string
+        categoryId:
+          type: integer
+        totalAmount:
+          type: number
+          format: double
+        operationType: 
+          type: string
+    AccountInterest:
+      type: object
+      properties:
+        idAccount: 
+          type: string
+        actualDue:
+          type: number
+          format: double
+        firstDue:
+          type: number
+          format: double
+        counts:
+          type: number
+          format: double
     Interest:
       type: object
       properties:
@@ -1257,8 +1831,17 @@ components:
         - $ref: '#/components/schemas/Exception'
       example:
         status:
-          status_code: 400
+          status_code: 403
           message: FORBIDDEN 
+        body: { }
+
+    NotFound:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        status:
+          status_code: 404
+          message: NOT FOUND 
         body: { }
 
     ServerError:
