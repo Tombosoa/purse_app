@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Numeric bank 
   version: 1.0.1
-  description: This application is a simulation of a number bank
+  description: This application is a simulation of a numeric bank
 servers:
   - url: http://localhost:8080
 tags:
